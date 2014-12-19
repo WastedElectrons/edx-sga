@@ -18,8 +18,11 @@ from webob.response import Response
 import webob.exc as ExceptionResponse
 
 from django.core.files import File
-from django.core.files.storage import default_storage
-from django.template import Context, Template
+#from django.core.files.storage import default_storage
+#from django.template import Context, Template
+
+from pymongo import MongoClient
+import gridfs
 
 from functools import partial
 
@@ -45,8 +48,10 @@ class FileManagementMixin(object):
 				comment='The body of the request must include a file.'
 				)
 
-		upload_key = _get_key(upload.file)
+		fs = _make_db_connection(self.xmodule_runtime.course_id)
 
+		upload_key = fs.put(upload.file)
+		
 		metadata = FileMetaData(
 			upload.file.name,
 			mimetypes.guess_type(upload.file.name)[0],
@@ -54,15 +59,6 @@ class FileManagementMixin(object):
 		)
 
 		filelist[upload_key] = metadata
-
-		path = _file_storage_path(
-			self.location.to_deprecated_string(),
-			upload_key,
-			upload.file.name
-		)
-
-		if not default_storage.exists(path):
-			default_storage.save(path, File(upload.file))
 
 		#Need to return key and metadata so staff can append it to list.
 		return (upload_key, metadata)
@@ -79,16 +75,11 @@ class FileManagementMixin(object):
 		if key not in filelist:
 			raise ExceptionResponse.HTTPNotFound(
 				detail="File not found",
-				comment='No file matching hash ' + key + 'found'
+				comment='No file with key {0} found'.format(key)
 				)
 
 		#get file info
 		metadata = get_file_metadata(filelist, key)
-		path = _file_storage_path(
-			self.location.to_deprecated_string(),
-			key,
-			metadata.filename
-		)
 
 		#check for file existance.
 		if metadata is None:
@@ -97,9 +88,12 @@ class FileManagementMixin(object):
 				detail="Error retriving file.  See log.",
 				)
 
+		fs = _make_db_connection(self.xmodule_runtime.course_id)
+
 		#set up download
 		BLOCK_SIZE = 2**10 * 8  # 8kb
-		foundFile = default_storage.open(path)
+		#foundFile = default_storage.open(path)
+		foundFile = fs.get(key)
 		app_iter = iter(partial(foundFile.read, BLOCK_SIZE), '')
 
 		return Response(
@@ -129,13 +123,10 @@ class FileManagementMixin(object):
 		buff = StringIO.StringIO()
 		assignment_zip = ZipFile(buff, mode='w')
 
+		fs = _make_db_connection(self.xmodule_runtime.course_id)
+
 		for key, metadata in get_file_metadata(filelist).iteritems():
-			path = _file_storage_path(
-				self.location.to_deprecated_string(),
-				key,
-				metadata.filename
-			)
-			afile = default_storage.open(path)
+			afile = fs.get(key)
 
 			assignment_zip.writestr(metadata.filename, afile.read())
 
@@ -160,13 +151,9 @@ class FileManagementMixin(object):
 		else:
 			metadata = get_file_metadata(filelist, key)
 
-		path = _file_storage_path(
-			self.location.to_deprecated_string(),
-			key,
-			metadata.filename
-		)
+		fs = _make_db_connection(self.xmodule_runtime.course_id)
 
-		default_storage.delete(path)
+		fs.delete(key)
 		del filelist[key]
 
 		return filelist
@@ -180,6 +167,17 @@ class FileManagementMixin(object):
 		for key in filelist.keys():
 			self.delete_file(filelist, key)
 
+def _make_db_connection(course_id):
+	_db = pymongo.database.Database(
+		pymongo.MongoClient(
+			host=localhost,
+			port=27017,
+			document_class=dict,
+		),
+		"edx_mfu"
+	)
+
+	return gridfs.GridFS(_db, "fs.{0}_{1}".format(course_name., module_name))    
 
 def _file_storage_path(url, key, filename):
 	assert url.startswith("i4x://")
