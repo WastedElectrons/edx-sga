@@ -177,7 +177,7 @@ def _make_db_connection(course_id):
 		"edx_mfu"
 	)
 
-	return gridfs.GridFS(_db, "fs.{0}_{1}".format(course_name., module_name))    
+	return gridfs.GridFS(_db, "fs.{0}".format(course_id))    
 
 def _file_storage_path(url, key, filename):
 	assert url.startswith("i4x://")
