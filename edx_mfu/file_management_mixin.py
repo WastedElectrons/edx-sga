@@ -50,7 +50,7 @@ class FileManagementMixin(object):
 
 		fs = _make_db_connection(self.xmodule_runtime.course_id)
 
-		upload_key = fs.put(upload.file).toString()
+		upload_key = str(fs.put(upload.file))
 		
 		metadata = FileMetaData(
 			upload.file.name,
