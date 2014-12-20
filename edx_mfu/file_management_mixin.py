@@ -93,7 +93,7 @@ class FileManagementMixin(object):
 		#set up download
 		BLOCK_SIZE = 2**10 * 8  # 8kb
 		#foundFile = default_storage.open(path)
-		foundFile = fs.get(ObjectId(key)
+		foundFile = fs.get(ObjectId(key))
 		app_iter = iter(partial(foundFile.read, BLOCK_SIZE), '')
 
 		return Response(
