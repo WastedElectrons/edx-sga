@@ -21,7 +21,7 @@ from django.core.files import File
 #from django.core.files.storage import default_storage
 #from django.template import Context, Template
 
-from pymongo import MongoClient
+import pymongo
 import gridfs
 
 from functools import partial
