@@ -170,7 +170,7 @@ class FileManagementMixin(object):
 def _make_db_connection(course_id):
 	_db = pymongo.database.Database(
 		pymongo.MongoClient(
-			host=localhost,
+			host='localhost',
 			port=27017,
 			document_class=dict,
 		),
