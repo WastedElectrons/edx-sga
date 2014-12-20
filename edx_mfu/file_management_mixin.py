@@ -23,6 +23,7 @@ from django.core.files import File
 
 import pymongo
 import gridfs
+from bson import ObjectId
 
 from functools import partial
 
