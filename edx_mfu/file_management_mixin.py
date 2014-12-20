@@ -93,7 +93,7 @@ class FileManagementMixin(object):
 		#set up download
 		BLOCK_SIZE = 2**10 * 8  # 8kb
 		#foundFile = default_storage.open(path)
-		foundFile = fs.get(key)
+		foundFile = fs.get(ObjectId(key)
 		app_iter = iter(partial(foundFile.read, BLOCK_SIZE), '')
 
 		return Response(
@@ -126,7 +126,7 @@ class FileManagementMixin(object):
 		fs = _make_db_connection(self.xmodule_runtime.course_id)
 
 		for key, metadata in get_file_metadata(filelist).iteritems():
-			afile = fs.get(key)
+			afile = fs.get(ObjectId(key))
 
 			assignment_zip.writestr(metadata.filename, afile.read())
 
@@ -149,7 +149,7 @@ class FileManagementMixin(object):
 		if key not in filelist:
 			return filelist
 		else:
-			metadata = get_file_metadata(filelist, key)
+			metadata = get_file_metadata(filelist, ObjectId(key))
 
 		fs = _make_db_connection(self.xmodule_runtime.course_id)
 
@@ -165,7 +165,7 @@ class FileManagementMixin(object):
 		filelist: A dictionary containint file metadata.
 		"""
 		for key in filelist.keys():
-			self.delete_file(filelist, key)
+			self.delete_file(filelist, ObjectId(key))
 
 def _make_db_connection(course_id):
 	_db = pymongo.database.Database(
