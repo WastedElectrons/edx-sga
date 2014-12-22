@@ -307,6 +307,8 @@ class MultipleFileUploadXBlock(
 
 	@XBlock.handler
 	def get_staff_grading_data(self, request, suffix=''):
+		"""Returns student data for the staff grading pane.
+		"""
 		#assert self.is_course_staff()
 		if not self.is_course_staff():
 			return Response(status=403)
@@ -314,6 +316,8 @@ class MultipleFileUploadXBlock(
 
 	@XBlock.handler
 	def staff_enter_grade(self, request, suffix=''):
+		"""change grading data for a student.
+		"""
 		if not self.is_course_staff():
 			return Response(status=403)
 
@@ -328,6 +332,8 @@ class MultipleFileUploadXBlock(
 
 	@XBlock.handler
 	def staff_remove_grade(self, request, suffix=''):
+		"""Clears the grade for this student.
+		"""
 		if not self.is_course_staff():
 			return Response(status=403)
 		self.remove_grade(request.params['module_id'])
@@ -336,6 +342,8 @@ class MultipleFileUploadXBlock(
 
 	@XBlock.handler
 	def student_submit(self, request, suffix=''):
+		"""Allows a student to mark an assignment as submitted.
+		"""
 		if not self.is_submitted:
 			self.is_submitted = True
 			self.submission_time = str(_now())
@@ -344,7 +352,8 @@ class MultipleFileUploadXBlock(
 
 	@XBlock.handler 
 	def staff_reopen_submission(self, request, suffix=''):
-		#assert self.is_course_staff()
+		"""Allows staff to unsubmit a submission for the student.
+		"""
 		if not self.is_course_staff():
 			return Response(status=403)
 		self.set_student_state(
@@ -353,14 +362,15 @@ class MultipleFileUploadXBlock(
 		)        
 
 		return Response(status=204);
-		#return Response(json_body=self.staff_grading_data())
 
 	@XBlock.handler
 	def staff_reopen_all_submissions(self, request, suffix=''):
-		#assert self.is_course_staff()
+		"""Unsubmits all submissions.
+		"""
 		if not self.is_course_staff():
 			return Response(status=403)
 
+		#Get all student modules for this assingment
 		query = StudentModule.objects.filter(
 			course_id=self.xmodule_runtime.course_id,
 			module_state_key=self.location
@@ -373,23 +383,25 @@ class MultipleFileUploadXBlock(
 			)   
 
 		return Response(status=204)
-		#return Response(json_body=self.staff_grading_data())       
 
 	@XBlock.handler
 	def staff_remove_submission(self, request, suffix=''):
+		"""Resets an assignment for the user and reopens it.
+		"""
 		if not self.is_course_staff():
 			return Response(status=403)
 		self.remove_submission(request.params['module_id'])
 
 		return Response(status=204)
-		#return Response(json_body=self.staff_grading_data())
 
 	@XBlock.handler
 	def staff_remove_all_submissions(self, request, suffix=''):
-		#assert self.is_course_staff()
+		"""Resets all submissions.
+		"""
 		if not self.is_course_staff():
 			return Response(status=403)
 
+		#gets all student modules.
 		query = StudentModule.objects.filter(
 			course_id=self.xmodule_runtime.course_id,
 			module_state_key=self.location
@@ -399,7 +411,6 @@ class MultipleFileUploadXBlock(
 			self.remove_submission(module.id)
 
 		return Response(status=204)
-		#return Response(json_body=self.staff_grading_data())
 
 	def enter_grade(self, module_id, grade, comment=''):
 		"""Allows staff to enter a grade for a student.
@@ -441,10 +452,6 @@ class MultipleFileUploadXBlock(
 		self.set_student_state(
 			module_id,
 			is_submitted = False,
-			#score = None,
-			#comment = '',
-			#score_published = False,
-			#score_approved = self.is_instructor(),
 			uploaded_files = dict(),
 			annotated_files = dict()
 		)
@@ -493,7 +500,7 @@ class MultipleFileUploadXBlock(
 		"""Returns the current state of the student from the module
 		with id matching module_id
 
-		Keyword arguments:
+		Arguments:
 		module_id: the id of the student module to retrive
 		"""
 		assert self.is_course_staff()

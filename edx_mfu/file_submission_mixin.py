@@ -39,7 +39,7 @@ class FileSubmissionMixin(XBlockMixin):
 	def student_upload_file(self, request, suffix=''):
 		"""Allows a student to upload a file for submission.
 
-		Keyword arguments:
+		Arguments:
 		request: holds the file to be added to the submission.
 		suffix:  not used.
 		"""
@@ -59,7 +59,7 @@ class FileSubmissionMixin(XBlockMixin):
 	def student_download_file(self, request, suffix=''):
 		"""Returns a temporary download link for a file.
 
-		Keyword arguments:
+		Arguments:
 		request: not used
 		suffix:  the hash of the file.
 		"""
@@ -69,7 +69,7 @@ class FileSubmissionMixin(XBlockMixin):
 	def staff_download_file(self, request, suffix=''):
 		"""Returns a temporary download link for a file.
 
-		Keyword arguments:
+		Arguments:
 		request: holds the module_id for a student module.
 		suffix:  the hash of the file.
 		"""
@@ -84,7 +84,7 @@ class FileSubmissionMixin(XBlockMixin):
 	def staff_download_zipped(self, request, suffix=''):
 		"""Returns all uploaded files in a zip file.
 
-		Keyword arguments:
+		Arguments:
 		request: holds the module_id for a student module.
 		suffix:  not used.
 		"""
@@ -101,7 +101,7 @@ class FileSubmissionMixin(XBlockMixin):
 	def student_download_zipped(self, request, suffix=''):
 		"""Returns all uploaded files in a zip file.
 
-		Keyword arguments:
+		Arguments:
 		request: not used.
 		suffix:  not used.
 		"""
@@ -114,7 +114,7 @@ class FileSubmissionMixin(XBlockMixin):
 	def student_delete_file(self, request, suffix=''):
 		"""Removes an uploaded file from the assignemnt
 
-		Keyword arguments:
+		Arguments:
 		request: not used.
 		suffix:  holds the key hash of the file to be deleted.
 		"""
@@ -126,7 +126,7 @@ class FileSubmissionMixin(XBlockMixin):
 	def staff_delete_file(self, request, suffix=''):
 		"""Removes an uploaded file from the assignemnt
 
-		Keyword arguments:
+		Arguments:
 		request: holds module_id.
 		suffix:  holds the key hash of the file to be deleted.
 		"""
@@ -146,7 +146,7 @@ class FileSubmissionMixin(XBlockMixin):
 	def uploaded_file_list(self, module_id):
 		"""Returns a list of files uploaded by a student.
 		
-		Keyword arguments:
+		Arguments:
 		module_id: A student module id.
 		"""
 		assert self.is_course_staff()

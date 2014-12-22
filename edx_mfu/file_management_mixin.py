@@ -7,7 +7,6 @@ import hashlib
 import json
 import logging
 import mimetypes
-import os
 import pkg_resources
 import pytz
 
@@ -18,8 +17,6 @@ from webob.response import Response
 import webob.exc as ExceptionResponse
 
 from django.core.files import File
-#from django.core.files.storage import default_storage
-#from django.template import Context, Template
 
 import pymongo
 import gridfs
@@ -47,9 +44,9 @@ class FileManagementMixin(object):
 			raise ExceptionResponse.BadRequest(
 				detail='No file in body.',
 				comment='The body of the request must include a file.'
-				)
+			)
 
-		fs = _make_db_connection(self.xmodule_runtime.course_id)
+		fs = self.make_db_connection()
 
 		upload_key = str(fs.put(upload.file))
 		
@@ -67,7 +64,7 @@ class FileManagementMixin(object):
 	def download_file(self, filelist, key):
 		"""Returns a file specified by a key.
 
-		Keyword arguments:
+		Arguments:
 		filelist: a list of all files for this students submission.
 		filename: the name of the zip file.
 		"""
@@ -77,7 +74,7 @@ class FileManagementMixin(object):
 			raise ExceptionResponse.HTTPNotFound(
 				detail="File not found",
 				comment='No file with key {0} found'.format(key)
-				)
+			)
 
 		#get file info
 		metadata = get_file_metadata(filelist, key)
@@ -87,9 +84,9 @@ class FileManagementMixin(object):
 			log.error("Problem in download_file: key exists, but metadata not found.", exc_info=True)
 			raise ExceptionResponse.HTTPInternalServerError(
 				detail="Error retriving file.  See log.",
-				)
+			)
 
-		fs = _make_db_connection(self.xmodule_runtime.course_id)
+		fs = self.make_db_connection()
 
 		#set up download
 		BLOCK_SIZE = 2**10 * 8  # 8kb
@@ -108,7 +105,7 @@ class FileManagementMixin(object):
 		"""Return a response containg all files for this submission in
 		a zip file.
 
-		Keyword arguments:
+		Arguments:
 		filelist: a list of all files for this students submission.
 		filename: the name of the zip file.
 		"""
@@ -118,14 +115,15 @@ class FileManagementMixin(object):
 			raise ExceptionResponse.HTTPNotFound(
 				detail="No files found",
 				comment='There are no files of that type available.'
-				)
+			)
 
 		#buffer to create zip file in memory.
 		buff = StringIO.StringIO()
 		assignment_zip = ZipFile(buff, mode='w')
 
-		fs = _make_db_connection(self.xmodule_runtime.course_id)
+		fs = self.make_db_connection()
 
+		#pack assignment submission into a zip file.
 		for key, metadata in get_file_metadata(filelist).iteritems():
 			afile = fs.get(ObjectId(key))
 
@@ -143,7 +141,7 @@ class FileManagementMixin(object):
 	def delete_file(self, filelist, key):
 		"""Removes an uploaded file from the assignment
 
-		Keyword arguments:
+		Arguments:
 		filelist: A dictionary containint file metadata.
 		key:      holds the key hash of the file to be deleted.
 		"""
@@ -152,9 +150,9 @@ class FileManagementMixin(object):
 		else:
 			metadata = get_file_metadata(filelist, ObjectId(key))
 
-		fs = _make_db_connection(self.xmodule_runtime.course_id)
+		fs = self.make_db_connection()
 
-		fs.delete(key)
+		fs.delete(ObjectId(key))
 		del filelist[key]
 
 		return filelist
@@ -162,45 +160,34 @@ class FileManagementMixin(object):
 	def delete_all(self, filelist):
 		"""Removes all files in the supplied filelist
 
-		Keyword arguments:
+		Arguments:
 		filelist: A dictionary containint file metadata.
 		"""
 		for key in filelist.keys():
 			self.delete_file(filelist, ObjectId(key))
 
-def _make_db_connection(course_id):
-	_db = pymongo.database.Database(
-		pymongo.MongoClient(
-			host='localhost',
-			port=27017,
-			document_class=dict,
-		),
-		"edx_mfu"
-	)
+	def make_db_connection():
+		"""Opens a connection to MongoDB for this assignments submissions.
+		"""
+		_db = pymongo.database.Database(
+			pymongo.MongoClient(
+				host='localhost',
+				port=27017,
+				document_class=dict,
+			),
+			"edx_mfu"
+		)
 
-	return gridfs.GridFS(_db, "fs.{0}".format(course_id))    
-
-def _file_storage_path(url, key, filename):
-	assert url.startswith("i4x://")
-	path = url[6:] + '/' + key
-	path += os.path.splitext(filename)[1]
-	return path
-
-def _get_key(file):
-	BLOCK_SIZE = 2**10 * 8  # 8kb
-	sha1 = hashlib.sha1()
-	for block in iter(partial(file.read, BLOCK_SIZE), ''):
-		sha1.update(block)
-	file.seek(0)
-
-	sha1.update(str(_now()))
-	return sha1.hexdigest()
+		return gridfs.GridFS(
+			_db, 
+			"fs.{0}".format(self.location.to_depreciated_string())
+		)    
 
 def get_file_metadata(filelist, hash = None):
 	"""Wraps file metadata in a FileMetaData tuple.
 	Returns all files, or a single file specified by hash.
 
-	Keyword arguments:
+	Arguments:
 	filelist: a list of file metadata.
 	suffix:   (optional) the hash of the desired file.
 	"""

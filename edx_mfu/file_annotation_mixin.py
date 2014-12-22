@@ -65,7 +65,7 @@ class FileAnnotationMixin(XBlockMixin):
 	def student_download_annotated(self, request, suffix=''):
 		"""Returns a temporary download link for an annotated file.
 
-		Keyword arguments:
+		Arguments:
 		request: not used
 		suffix:  the hash of the file.
 		"""
@@ -75,7 +75,7 @@ class FileAnnotationMixin(XBlockMixin):
 	def staff_download_annotated(self, request, suffix=''):
 		"""Returns a temporary download link for an annotated file.
 
-		Keyword arguments:
+		Arguments:
 		request: holds the module_id for a student module.
 		suffix:  the hash of the file.
 		"""
@@ -91,7 +91,7 @@ class FileAnnotationMixin(XBlockMixin):
 	def staff_download_annotated_zipped(self, request, suffix=''):
 		"""Returns all annotated files in a zip file.
 
-		Keyword arguments:
+		Arguments:
 		request: holds the module_id for a student module.
 		suffix:  not used.
 		"""
@@ -110,7 +110,7 @@ class FileAnnotationMixin(XBlockMixin):
 	def student_download_annotated_zipped(self, request, suffix=''):
 		"""Returns all annotated files in a zip file.
 
-		Keyword arguments:
+		Arguments:
 		request: not used
 		suffix:  not used.
 		"""
@@ -139,7 +139,7 @@ class FileAnnotationMixin(XBlockMixin):
 	def annotated_file_list(self, module_id):
 		"""Returns a list of annotated files for a student
 
-		Keyword arguments:
+		Arguments:
 		module_id: A student module id.
 		"""
 		assert self.is_course_staff()
