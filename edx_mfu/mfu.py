@@ -34,7 +34,7 @@ from xblock.fragment import Fragment
 
 from xmodule.util.duedate import get_extended_due_date
 
-log = logging.getLogger(__name__)
+log=logging.getLogger(__name__)
 
 
 class MultipleFileUploadXBlock(XBlock,
@@ -42,19 +42,20 @@ class MultipleFileUploadXBlock(XBlock,
                                FileSubmissionMixin,
                                FileAnnotationMixin):
 	"""
-	This block defines a Multiple File Upload Assignment.  Students are shown a rubric
-	and invited to upload a file which is then graded by staff.
+	This block defines a Multiple File Upload Assignment.  Students 
+	are shown a rubric and invited to upload a file which is then 
+	graded by staff.
 	"""
-	has_score = True
-	icon_class = 'problem'
+	has_score=True
+	icon_class='problem'
 
-	display_name = String(
+	display_name=String(
         default='Multiple File Upload Assignment', scope=Scope.settings,
         help="This name appears in the horizontal navigation at the top of "
              "the page."
 	)
 
-	weight = Float(
+	weight=Float(
 		display_name="Problem Weight",
 		help=("Defines the number of points each problem is worth. "
 			  "If the value is not set, the problem is worth the sum of the "
@@ -63,7 +64,7 @@ class MultipleFileUploadXBlock(XBlock,
 		scope=Scope.settings
 	)
 
-	points = Float(
+	points=Float(
 		display_name="Maximum score",
 		help=("Maximum grade score given to assignment by staff."),
 		values={"min": 0, "step": .1},
@@ -71,7 +72,7 @@ class MultipleFileUploadXBlock(XBlock,
 		scope=Scope.settings
 	)
 
-	score = Float(
+	score=Float(
 		display_name="Grade score",
 		default=None,
 		help=("Grade score given to assignment by staff."),
@@ -79,14 +80,14 @@ class MultipleFileUploadXBlock(XBlock,
 		scope=Scope.user_state
 	)
 
-	score_published = Boolean(
+	score_published=Boolean(
 		display_name="Whether score has been published.",
 		help=("This is a terrible hack, an implementation detail."),
 		default=True,
 		scope=Scope.user_state
 	)
 
-	score_approved = Boolean(
+	score_approved=Boolean(
 		display_name="Whether the score has been approved by an instructor",
 		help=("Course staff may submit grades but an instructor must approve "
 			  "grades before they become visible."),
@@ -94,21 +95,21 @@ class MultipleFileUploadXBlock(XBlock,
 		scope=Scope.user_state
 	)
 
-	comment = String(
+	comment=String(
 		display_name="Instructor comment",
 		default='',
 		scope=Scope.user_state,
 		help="Feedback given to student by instructor."
 	)
 
-	is_submitted = Boolean(
+	is_submitted=Boolean(
 		display_name="Is Submitted",
 		scope=Scope.user_state,
 		default=False,
 		help="Whether the student has submitted their work or not."
 	)
 
-	submission_time = String(
+	submission_time=String(
 		display_name="Submission Time",
 		scope=Scope.user_state,
 		default=None,
@@ -132,17 +133,17 @@ class MultipleFileUploadXBlock(XBlock,
 				'value': self.score,
 				'max_value': self.max_score(),
 			})
-			self.score_published = True
+			self.score_published=True
 
-		context = {
+		context={
 			"student_state": json.dumps(self.student_state()),
 			"id": self.location.name.replace('.', '_')
 		}
 		if self.show_staff_grading_interface():
-			context['is_course_staff'] = True
+			context['is_course_staff']=True
 			self.update_staff_debug_context(context)
 
-		fragment = Fragment()
+		fragment=Fragment()
 		fragment.add_content(
 			render_template(
 				'templates/multiple_file_upload/show.html',
@@ -161,11 +162,11 @@ class MultipleFileUploadXBlock(XBlock,
 		Gathers information for the Staff Debug Info button on 
 		the lms page.
 		"""
-		published = self.published_date
-		context['is_released'] = published and published < _now()
-		context['location'] = self.location
-		context['category'] = type(self).__name__
-		context['fields'] = [
+		published=self.published_date
+		context['is_released']=published and published < _now()
+		context['location']=self.location
+		context['category']=type(self).__name__
+		context['fields']=[
 			(name, field.read_from(self))
 			for name, field in self.fields.items()]
 
@@ -175,20 +176,20 @@ class MultipleFileUploadXBlock(XBlock,
 		rendering in client view.
 		"""
 
-		uploaded = []
+		uploaded=[]
 		for sha1, metadata in self.uploaded_files.iteritems():
-			metadata = FileMetaData._make(metadata)
+			metadata=FileMetaData._make(metadata)
 			uploaded.append({"sha1": sha1, "filename": metadata.filename})
 
-		annotated = []
+		annotated=[]
 		for sha1, metadata in self.annotated_files.iteritems():
-			metadata = FileMetaData._make(metadata)
+			metadata=FileMetaData._make(metadata)
 			annotated.append({"sha1": sha1, "filename": metadata.filename})
 
 		if self.score is not None and self.score_approved:
-			graded = {'score': self.score, 'comment': self.comment}
+			graded={'score': self.score, 'comment': self.comment}
 		else:
-			graded = None
+			graded=None
 
 		return {
 			"uploaded":        uploaded,
@@ -212,20 +213,20 @@ class MultipleFileUploadXBlock(XBlock,
 			"""
 			Packages data from a student module for display to staff.
 			"""
-			state = json.loads(module.state)
-			instructor = self.is_instructor()
-			score = state.get('score')
-			approved = state.get('score_approved')
-			submitted = state.get('is_submitted')
-			submission_time = state.get('submission_time')
+			state=json.loads(module.state)
+			instructor=self.is_instructor()
+			score=state.get('score')
+			approved=state.get('score_approved')
+			submitted=state.get('is_submitted')
+			submission_time=state.get('submission_time')
 
 			#can a grade be entered
-			due = get_extended_due_date(self)
-			may_grade = (instructor or not approved) 
+			due=get_extended_due_date(self)
+			may_grade=(instructor or not approved) 
 			if due is not None:
-				may_grade = may_grade and (submitted or (due < _now())) 
+				may_grade=may_grade and (submitted or (due < _now())) 
 
-			uploaded = []
+			uploaded=[]
 			if (state.get('is_submitted')):
 				for sha1, metadata in get_file_metadata(state.get("uploaded_files")).iteritems():
 					uploaded.append({
@@ -234,7 +235,7 @@ class MultipleFileUploadXBlock(XBlock,
 						"timestamp": metadata.timestamp
 					})
 
-			annotated = []
+			annotated=[]
 			for sha1, metadata in get_file_metadata(state.get("annotated_files")).iteritems():
 				annotated.append({
 					"sha1":      sha1, 
@@ -261,7 +262,7 @@ class MultipleFileUploadXBlock(XBlock,
 				'submission_time': submission_time
 			}
 
-		query = StudentModule.objects.filter(
+		query=StudentModule.objects.filter(
 			course_id=self.xmodule_runtime.course_id,
 			module_state_key=self.location
 		)
@@ -273,11 +274,11 @@ class MultipleFileUploadXBlock(XBlock,
 
 	def studio_view(self, context=None):
 		try:
-			cls = type(self)
+			cls=type(self)
 
 			def none_to_empty(x):
 				return x if x is not None else ''
-			edit_fields = (
+			edit_fields=(
 				(field, none_to_empty(getattr(self, field.name)), validator)
 				for field, validator in (
 					(cls.display_name, 'string'),
@@ -285,10 +286,10 @@ class MultipleFileUploadXBlock(XBlock,
 					(cls.weight, 'number'))
 			)
 
-			context = {
+			context={
 				'fields': edit_fields
 			}
-			fragment = Fragment()
+			fragment=Fragment()
 			fragment.add_content(
 				render_template(
 					'templates/multiple_file_upload/edit.html',
@@ -306,7 +307,6 @@ class MultipleFileUploadXBlock(XBlock,
 	def save_mfu(self, data, suffix=''):
 		for name in ('display_name', 'points', 'weight'):
 			setattr(self, name, data.get(name, getattr(self, name)))
-
 
 	@XBlock.handler
 	def get_staff_grading_data(self, request, suffix=''):
@@ -340,7 +340,7 @@ class MultipleFileUploadXBlock(XBlock,
 		if not self.is_course_staff():
 			return Response(status=403)
 		self.remove_grade(request.params['module_id'])
-		
+
 		return Response(json_body=self.staff_grading_data())
 
 	@XBlock.handler
@@ -348,8 +348,8 @@ class MultipleFileUploadXBlock(XBlock,
 		"""Allows a student to mark an assignment as submitted.
 		"""
 		if not self.is_submitted:
-			self.is_submitted = True
-			self.submission_time = str(_now())
+			self.is_submitted=True
+			self.submission_time=str(_now())
 
 		return Response(status=204)
 
@@ -361,7 +361,7 @@ class MultipleFileUploadXBlock(XBlock,
 			return Response(status=403)
 		self.set_student_state(
 			request.params['module_id'],
-			is_submitted = False
+			is_submitted=False
 		)        
 
 		return Response(status=204);
@@ -374,7 +374,7 @@ class MultipleFileUploadXBlock(XBlock,
 			return Response(status=403)
 
 		#Get all student modules for this assingment
-		query = StudentModule.objects.filter(
+		query=StudentModule.objects.filter(
 			course_id=self.xmodule_runtime.course_id,
 			module_state_key=self.location
 		)
@@ -382,7 +382,7 @@ class MultipleFileUploadXBlock(XBlock,
 		for module in query:
 			self.set_student_state(
 				module.id,
-				is_submitted = False
+				is_submitted=False
 			)   
 
 		return Response(status=204)
@@ -405,7 +405,7 @@ class MultipleFileUploadXBlock(XBlock,
 			return Response(status=403)
 
 		#gets all student modules.
-		query = StudentModule.objects.filter(
+		query=StudentModule.objects.filter(
 			course_id=self.xmodule_runtime.course_id,
 			module_state_key=self.location
 		)
@@ -422,10 +422,10 @@ class MultipleFileUploadXBlock(XBlock,
 			return Response(status=403)
 		self.set_student_state(
 			module_id,
-			score = float(grade),
-			comment = comment,
-			score_published = False,
-			score_approved = self.is_instructor()
+			score=float(grade),
+			comment=comment,
+			score_published=False,
+			score_approved=self.is_instructor()
 		)
 
 	def remove_grade(self, module_id):
@@ -433,10 +433,10 @@ class MultipleFileUploadXBlock(XBlock,
 			return Response(status=403)
 		self.set_student_state(
 			module_id,
-			score = None,
-			comment = '',
-			score_published = False,
-			score_approved = False
+			score=None,
+			comment='',
+			score_published=False,
+			score_approved=False
 		)
 
 	def remove_submission(self, module_id):
@@ -447,34 +447,34 @@ class MultipleFileUploadXBlock(XBlock,
 		module_id: The id of the student module for the student whos
 		submission is to be reopened.
 		"""
-		state = self.get_student_state(module_id)
+		state=self.get_student_state(module_id)
 
 		self.delete_all(state.get('uploaded_files'))
 		self.delete_all(state.get('annotated_files'))
 		self.remove_grade(module_id)
 		self.set_student_state(
 			module_id,
-			is_submitted = False,
-			uploaded_files = dict(),
-			annotated_files = dict()
+			is_submitted=False,
+			uploaded_files=dict(),
+			annotated_files=dict()
 		)
 
 	def set_student_state(self, module_id, **fields):
 		"""Helper used to allow staff to set arbitrary student fields.
 		"""
 		assert self.is_course_staff()
-		module = StudentModule.objects.get(pk=module_id)
-		state = json.loads(module.state)
+		module=StudentModule.objects.get(pk=module_id)
+		state=json.loads(module.state)
 
 		for key, value in fields.iteritems():
-			state[key] = value
+			state[key]=value
 
-		module.state = json.dumps(state)
+		module.state=json.dumps(state)
 		module.save()
 
 	def past_due(self):
 		"""Returns True if the assignment is past due"""
-		due = get_extended_due_date(self)
+		due=get_extended_due_date(self)
 
 		if due is not None:
 			return _now() > due
@@ -507,7 +507,7 @@ class MultipleFileUploadXBlock(XBlock,
 		module_id: the id of the student module to retrive
 		"""
 		assert self.is_course_staff()
-		module = StudentModule.objects.get(pk=module_id)
+		module=StudentModule.objects.get(pk=module_id)
 		return json.loads(module.state)
 
 	def is_course_staff(self):
@@ -519,10 +519,10 @@ class MultipleFileUploadXBlock(XBlock,
 		return self.xmodule_runtime.get_user_role() == 'instructor'
 
 	def show_staff_grading_interface(self):
-		in_studio_preview = self.scope_ids.user_id is None
+		in_studio_preview=self.scope_ids.user_id is None
 		return self.is_course_staff() and not in_studio_preview
 
-	def validate_staff_request(self, request = None):
+	def validate_staff_request(self, request=None):
 		if not self.is_course_staff():
 			raise ExceptionResponse.HTTPForbidden(
 				detail='Not a staff member')
@@ -533,9 +533,10 @@ class MultipleFileUploadXBlock(XBlock,
 					comment='staff must send student module id with requests involing students.'
 					)					
 
+
 def _resource(path):  # pragma: NO COVER
 	"""Handy helper for getting resources from our kit."""
-	data = pkg_resources.resource_string(__name__, path)
+	data=pkg_resources.resource_string(__name__, path)
 	return data.decode("utf8")
 
 
@@ -547,7 +548,7 @@ def load_resource(resource_path):
 	"""
 	Gets the content of a resource
 	"""
-	resource_content = pkg_resources.resource_string(__name__, resource_path)
+	resource_content=pkg_resources.resource_string(__name__, resource_path)
 	return unicode(resource_content)
 
 
@@ -555,6 +556,6 @@ def render_template(template_path, context={}):
 	"""
 	Evaluate a template by resource path, applying the provided context
 	"""
-	template_str = load_resource(template_path)
-	template = Template(template_str)
+	template_str=load_resource(template_path)
+	template=Template(template_str)
 	return template.render(Context(context))
