@@ -24,6 +24,7 @@ from django.template import Context, Template
 
 log = logging.getLogger(__name__)
 
+
 class FileAnnotationMixin(XBlockMixin):
     """
     Mixin for handling annotations.

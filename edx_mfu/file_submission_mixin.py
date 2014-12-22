@@ -34,7 +34,7 @@ class FileSubmissionMixin(XBlockMixin):
         default=dict(),
         help="Files uploaded by the user. Tuple of filename, "
              "mimetype and timestamp"
-    )   
+    )
 
     @XBlock.handler
     def student_upload_file(self, request, suffix=''):
@@ -79,7 +79,7 @@ class FileSubmissionMixin(XBlockMixin):
         return self.download_file(
             self.uploaded_file_list(request.params['module_id']),
             suffix
-         )
+        )
 
     @XBlock.handler
     def staff_download_zipped(self, request, suffix=''):
@@ -146,7 +146,7 @@ class FileSubmissionMixin(XBlockMixin):
 
     def uploaded_file_list(self, module_id):
         """Returns a list of files uploaded by a student.
-        
+
         Arguments:
         module_id: A student module id.
         """
