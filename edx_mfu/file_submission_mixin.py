@@ -32,7 +32,8 @@ class FileSubmissionMixin(XBlockMixin):
         display_name="Uploaded Files",
         scope=Scope.user_state,
         default=dict(),
-        help="Files uploaded by the user. Tuple of filename, mimetype and timestamp"
+        help="Files uploaded by the user. Tuple of filename, "
+             "mimetype and timestamp"
     )   
 
     @XBlock.handler
@@ -48,13 +49,13 @@ class FileSubmissionMixin(XBlockMixin):
             self.uploaded_files,
             request.params['uploadedFile']
         )
-        
+
         return Response(json_body={
             "sha1":      key,
             "filename":  uploaded.filename,
             "timestamp": uploaded.timestamp
         })
-        
+
     @XBlock.handler
     def student_download_file(self, request, suffix=''):
         """Returns a temporary download link for a file.
@@ -79,7 +80,7 @@ class FileSubmissionMixin(XBlockMixin):
             self.uploaded_file_list(request.params['module_id']),
             suffix
          )
-    
+
     @XBlock.handler
     def staff_download_zipped(self, request, suffix=''):
         """Returns all uploaded files in a zip file.
@@ -90,11 +91,11 @@ class FileSubmissionMixin(XBlockMixin):
         """
         self.validate_staff_request(request)
 
-        module_id = request.params['module_id'];
+        module_id = request.params['module_id']
         module = self.get_module(module_id)
         return self.download_zipped(
             self.uploaded_file_list(module_id),
-            self.display_name + "-" + module.student.username
+            "{}-{}".format(self.display_name, module.student.username)
         )
 
     @XBlock.handler
@@ -120,7 +121,7 @@ class FileSubmissionMixin(XBlockMixin):
         """
         assert self.upload_allowed()
         self.delete_file(self.uploaded_files, suffix)
-        return Response(status = 204)
+        return Response(status=204)
 
     @XBlock.handler
     def staff_delete_file(self, request, suffix=''):
@@ -138,7 +139,7 @@ class FileSubmissionMixin(XBlockMixin):
         newFilelist = self.delete_file(uploaded, suffix)
         self.set_student_state(
             module_id,
-            uploaded_files = newFilelist
+            uploaded_files=newFilelist
         )
 
         return Response(status=204)
@@ -151,6 +152,7 @@ class FileSubmissionMixin(XBlockMixin):
         """
         assert self.is_course_staff()
         return self.get_student_state(module_id)['uploaded_files']
+
 
 def _now():
     return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)

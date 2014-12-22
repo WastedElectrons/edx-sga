@@ -34,6 +34,7 @@ FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
 
 log = logging.getLogger(__name__)
 
+
 class FileManagementMixin(object):
     """
     A mixin to handle file management for the MFU XBlock.
@@ -50,16 +51,16 @@ class FileManagementMixin(object):
         fs = self.make_db_connection()
 
         upload_key = str(fs.put(upload.file))
-        
+
         metadata = FileMetaData(
             upload.file.name,
             mimetypes.guess_type(upload.file.name)[0],
-            str( _now() )
+            str(_now())
         )
 
         filelist[upload_key] = metadata
 
-        #Need to return key and metadata so staff can append it to list.
+        # Need to return key and metadata so staff can append it to list.
         return (upload_key, metadata)
 
     def download_file(self, filelist, key):
@@ -77,10 +78,10 @@ class FileManagementMixin(object):
                 comment='No file with key {0} found'.format(key)
             )
 
-        #get file info
+        # get file info
         metadata = get_file_metadata(filelist, key)
 
-        #check for file existance.
+        # check for file existance.
         if metadata is None:
             log.error("Problem in download_file: key exists, but "
                       "metadata not found.", exc_info=True)
@@ -90,20 +91,18 @@ class FileManagementMixin(object):
 
         fs = self.make_db_connection()
 
-        #set up download
+        # set up download
         BLOCK_SIZE = 2**10 * 8  # 8kb
-        #foundFile = default_storage.open(path)
         foundFile = fs.get(ObjectId(key))
         app_iter = iter(partial(foundFile.read, BLOCK_SIZE), '')
 
         return Response(
-            app_iter =             app_iter,
-            content_type =         metadata.mimetype,
-            content_disposition = 
+            app_iter=app_iter,
+            content_type=metadata.mimetype,
+            content_disposition=
                 "attachment; filename= {}".format(metadata.filename) 
         )
 
-    #TODO: Filename based on requestor and submittor
     def download_zipped(self, filelist, filename="assignment"):
         """Return a response containg all files for this submission in
         a zip file.
@@ -120,13 +119,13 @@ class FileManagementMixin(object):
                 comment='There are no files of that type available.'
             )
 
-        #buffer to create zip file in memory.
+        # buffer to create zip file in memory.
         buff = StringIO.StringIO()
         assignment_zip = ZipFile(buff, mode='w')
 
         fs = self.make_db_connection()
 
-        #pack assignment submission into a zip file.
+        # pack assignment submission into a zip file.
         for key, metadata in get_file_metadata(filelist).iteritems():
             afile = fs.get(ObjectId(key))
 
@@ -136,8 +135,8 @@ class FileManagementMixin(object):
         buff.seek(0)
 
         return Response(
-            body =                buff.read(),
-            content_type =        'application/zip',
+            body=buff.read(),
+            content_type='application/zip',
             content_disposition = 
                 'attachment; filename={}.zip'.format(filename)
         )
@@ -185,7 +184,7 @@ class FileManagementMixin(object):
         return gridfs.GridFS(
             _db,
             "fs.{0}".format(self.location.to_depreciated_string())
-        )    
+        )
 
 def get_file_metadata(filelist, hash = None):
     """Wraps file metadata in a FileMetaData tuple.
@@ -205,6 +204,7 @@ def get_file_metadata(filelist, hash = None):
             return None
         else: #return one file.
             return FileMetaData._make(filelist[hash])
+
 
 def _now():
     return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)

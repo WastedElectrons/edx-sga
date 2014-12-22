@@ -56,7 +56,7 @@ class FileAnnotationMixin(XBlockMixin):
         )
 
         return Response(json_body={
-            "sha1":      key, 
+            "sha1":      key,
             "filename":  uploaded.filename,
             "timestamp": uploaded.timestamp
         })
@@ -85,7 +85,7 @@ class FileAnnotationMixin(XBlockMixin):
             self.annotated_file_list(request.params['module_id']),
             suffix
         )
-    
+
     # For downloading the entire assingment for one student.
     @XBlock.handler
     def staff_download_annotated_zipped(self, request, suffix=''):
@@ -150,6 +150,7 @@ class FileAnnotationMixin(XBlockMixin):
             return dict()
         else:
             return filelist
+
 
 def _now():
     return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
