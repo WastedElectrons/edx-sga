@@ -37,10 +37,11 @@ from xmodule.util.duedate import get_extended_due_date
 log = logging.getLogger(__name__)
 
 
-class MultipleFileUploadXBlock(XBlock,
-                               FileManagementMixin,
-                               FileSubmissionMixin,
-                               FileAnnotationMixin):
+class MultipleFileUploadXBlock(
+	XBlock,
+	FileManagementMixin,
+	FileSubmissionMixin,
+	FileAnnotationMixin):
 	"""
 	This block defines a Multiple File Upload Assignment.  Students 
 	are shown a rubric and invited to upload a file which is then 
@@ -152,7 +153,6 @@ class MultipleFileUploadXBlock(XBlock,
 		)
 		fragment.add_css(_resource("static/css/edx_mfu.css"))
 		fragment.add_javascript(_resource("static/js/src/edx_mfu.js"))
-		#Fragment.add_javascript(_resource("static/js/vendor/date.js"))
 		fragment.add_javascript_url("/static/js/vendor/date.js")		
 		fragment.initialize_js('MultipleFileUploadXBlock')
 		return fragment
