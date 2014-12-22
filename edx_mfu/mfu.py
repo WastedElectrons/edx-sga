@@ -42,29 +42,29 @@ class MultipleFileUploadXBlock(
         FileManagementMixin,
         FileSubmissionMixin,
         FileAnnotationMixin):
-	"""
-	This block defines a Multiple File Upload Assignment.  Students
-	are shown a rubric and invited to upload a file which is then
-	graded by staff.
-	"""
+    """
+    This block defines a Multiple File Upload Assignment.  Students
+    are shown a rubric and invited to upload a file which is then
+    graded by staff.
+    """
 	has_score = True
 	icon_class = 'problem'
 
 	display_name = String(
-		default='Multiple File Upload Assignment',
-		scope=Scope.settings,
-		help="This name appears in the horizontal navigation at the top of "
+        default='Multiple File Upload Assignment',
+        scope=Scope.settings,
+        help="This name appears in the horizontal navigation at the top of "
              "the page."
-	)
+    )
 
 	weight = Float(
-		display_name="Problem Weight",
-		help=("Defines the number of points each problem is worth. "
-			  "If the value is not set, the problem is worth the sum of the "
-			  "option point values."),
-		values={"min": 0, "step": .1},
-		scope=Scope.settings
-	)
+        display_name="Problem Weight",
+        help=("Defines the number of points each problem is worth. "
+              "If the value is not set, the problem is worth the sum of the "
+              "option point values."),
+        values={"min": 0, "step": .1},
+        scope=Scope.settings
+    )
 
 	points = Float(
 		display_name="Maximum score",
