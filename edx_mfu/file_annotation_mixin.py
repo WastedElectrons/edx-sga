@@ -13,7 +13,7 @@ import pytz
 
 from courseware.models import StudentModule
 
-# from xblock.core import XBlock
+from xblock.core import XBlock
 from xblock.fields import XBlockMixin, Scope, Dict
 
 from webob.response import Response
