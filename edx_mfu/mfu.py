@@ -1,5 +1,5 @@
 """
-This block defines a Multiple File Upload Assignment.  Students are 
+This block defines a Multiple File Upload Assignment.  Students are
 shown a rubric and invited to upload a file which is then graded by staff.
 """
 import datetime
@@ -11,7 +11,12 @@ import os
 import pkg_resources
 import pytz
 
-from file_management_mixin import FileMetaData, FileManagementMixin, get_file_metadata
+from file_management_mixin import (
+	FileMetaData, 
+	FileManagementMixin, 
+	get_file_metadata
+)
+
 from file_submission_mixin import FileSubmissionMixin
 from file_annotation_mixin import FileAnnotationMixin
 
@@ -32,11 +37,10 @@ from xmodule.util.duedate import get_extended_due_date
 log = logging.getLogger(__name__)
 
 
-class MultipleFileUploadXBlock(
-	XBlock, 
-	FileManagementMixin, 
-	FileSubmissionMixin,
-	FileAnnotationMixin):
+class MultipleFileUploadXBlock(XBlock, 
+                               FileManagementMixin, 
+                               FileSubmissionMixin,
+                               FileAnnotationMixin):
 	"""
 	This block defines a Multiple File Upload Assignment.  Students are shown a rubric
 	and invited to upload a file which is then graded by staff.
@@ -45,9 +49,9 @@ class MultipleFileUploadXBlock(
 	icon_class = 'problem'
 
 	display_name = String(
-		default='Multiple File Upload Assignment', scope=Scope.settings,
-		help="This name appears in the horizontal navigation at the top of "
-			 "the page."
+        default='Multiple File Upload Assignment', scope=Scope.settings,
+        help="This name appears in the horizontal navigation at the top of "
+             "the page."
 	)
 
 	weight = Float(
