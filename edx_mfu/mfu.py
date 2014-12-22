@@ -12,9 +12,9 @@ import pkg_resources
 import pytz
 
 from file_management_mixin import (
-	FileMetaData, 
-	FileManagementMixin, 
-	get_file_metadata
+    FileMetaData,
+    FileManagementMixin,
+    get_file_metadata
 )
 
 from file_submission_mixin import FileSubmissionMixin
@@ -37,8 +37,8 @@ from xmodule.util.duedate import get_extended_due_date
 log = logging.getLogger(__name__)
 
 
-class MultipleFileUploadXBlock(XBlock, 
-                               FileManagementMixin, 
+class MultipleFileUploadXBlock(XBlock,
+                               FileManagementMixin,
                                FileSubmissionMixin,
                                FileAnnotationMixin):
 	"""
