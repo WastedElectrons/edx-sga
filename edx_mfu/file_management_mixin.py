@@ -169,7 +169,7 @@ class FileManagementMixin(object):
         for key in filelist.keys():
             self.delete_file(filelist, ObjectId(key))
 
-    def make_db_connection():
+    def make_db_connection(self):
         """Opens a connection to MongoDB for this assignments submissions.
         """
         _db = pymongo.database.Database(
