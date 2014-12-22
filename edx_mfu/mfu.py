@@ -38,10 +38,10 @@ log = logging.getLogger(__name__)
 
 
 class MultipleFileUploadXBlock(
-	XBlock,
-	FileManagementMixin,
-	FileSubmissionMixin,
-	FileAnnotationMixin):
+        XBlock,
+        FileManagementMixin,
+        FileSubmissionMixin,
+        FileAnnotationMixin):
 	"""
 	This block defines a Multiple File Upload Assignment.  Students
 	are shown a rubric and invited to upload a file which is then
