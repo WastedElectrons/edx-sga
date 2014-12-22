@@ -183,7 +183,7 @@ class FileManagementMixin(object):
 
         return gridfs.GridFS(
             _db,
-            "fs.{0}".format(self.location.to_depreciated_string())
+            "fs.{0}".format(self.location.to_deprecated_string())
         )
 
 
