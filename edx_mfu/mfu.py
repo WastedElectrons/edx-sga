@@ -1,6 +1,6 @@
 """
-This block defines a Multiple File Upload Assignment.  Students are shown a rubric
-and invited to upload a file which is then graded by staff.
+This block defines a Multiple File Upload Assignment.  Students are 
+shown a rubric and invited to upload a file which is then graded by staff.
 """
 import datetime
 import hashlib
@@ -18,7 +18,6 @@ from file_annotation_mixin import FileAnnotationMixin
 from courseware.models import StudentModule
 
 from django.core.files import File
-#from django.core.files.storage import default_storage
 from django.template import Context, Template
 
 from webob.response import Response
