@@ -34,7 +34,7 @@ from xblock.fragment import Fragment
 
 from xmodule.util.duedate import get_extended_due_date
 
-log=logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
 
 class MultipleFileUploadXBlock(XBlock,
