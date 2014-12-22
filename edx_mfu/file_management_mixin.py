@@ -100,7 +100,7 @@ class FileManagementMixin(object):
             app_iter=app_iter,
             content_type=metadata.mimetype,
             content_disposition=
-                "attachment; filename= {}".format(metadata.filename) 
+                "attachment; filename= {}".format(metadata.filename)
         )
 
     def download_zipped(self, filelist, filename="assignment"):
@@ -137,7 +137,7 @@ class FileManagementMixin(object):
         return Response(
             body=buff.read(),
             content_type='application/zip',
-            content_disposition = 
+            content_disposition=
                 'attachment; filename={}.zip'.format(filename)
         )
 
@@ -186,7 +186,8 @@ class FileManagementMixin(object):
             "fs.{0}".format(self.location.to_depreciated_string())
         )
 
-def get_file_metadata(filelist, hash = None):
+
+def get_file_metadata(filelist, hash=None):
     """Wraps file metadata in a FileMetaData tuple.
     Returns all files, or a single file specified by hash.
 
@@ -204,7 +205,6 @@ def get_file_metadata(filelist, hash = None):
             return None
         else: #return one file.
             return FileMetaData._make(filelist[hash])
-
 
 def _now():
     return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
