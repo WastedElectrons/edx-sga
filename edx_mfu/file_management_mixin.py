@@ -34,173 +34,173 @@ FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
 log = logging.getLogger(__name__)
 
 class FileManagementMixin(object):
-	"""
-	A mixin to handle file management for the MFU XBlock.
-	"""
-	def upload_file(self, filelist, upload):
-		"""Saves a file to a list of files.
-		"""
-		if upload.file is None:
-			raise ExceptionResponse.BadRequest(
-				detail='No file in body.',
-				comment='The body of the request must include a file.'
-			)
+    """
+    A mixin to handle file management for the MFU XBlock.
+    """
+    def upload_file(self, filelist, upload):
+        """Saves a file to a list of files.
+        """
+        if upload.file is None:
+            raise ExceptionResponse.BadRequest(
+                detail='No file in body.',
+                comment='The body of the request must include a file.'
+            )
 
-		fs = self.make_db_connection()
+        fs = self.make_db_connection()
 
-		upload_key = str(fs.put(upload.file))
-		
-		metadata = FileMetaData(
-			upload.file.name,
-			mimetypes.guess_type(upload.file.name)[0],
-			str( _now() )
-		)
+        upload_key = str(fs.put(upload.file))
+        
+        metadata = FileMetaData(
+            upload.file.name,
+            mimetypes.guess_type(upload.file.name)[0],
+            str( _now() )
+        )
 
-		filelist[upload_key] = metadata
+        filelist[upload_key] = metadata
 
-		#Need to return key and metadata so staff can append it to list.
-		return (upload_key, metadata)
+        #Need to return key and metadata so staff can append it to list.
+        return (upload_key, metadata)
 
-	def download_file(self, filelist, key):
-		"""Returns a file specified by a key.
+    def download_file(self, filelist, key):
+        """Returns a file specified by a key.
 
-		Arguments:
-		filelist: a list of all files for this students submission.
-		filename: the name of the zip file.
-		"""
-		assert filelist is not None
+        Arguments:
+        filelist: a list of all files for this students submission.
+        filename: the name of the zip file.
+        """
+        assert filelist is not None
 
-		if key not in filelist:
-			raise ExceptionResponse.HTTPNotFound(
-				detail="File not found",
-				comment='No file with key {0} found'.format(key)
-			)
+        if key not in filelist:
+            raise ExceptionResponse.HTTPNotFound(
+                detail="File not found",
+                comment='No file with key {0} found'.format(key)
+            )
 
-		#get file info
-		metadata = get_file_metadata(filelist, key)
+        #get file info
+        metadata = get_file_metadata(filelist, key)
 
-		#check for file existance.
-		if metadata is None:
-			log.error("Problem in download_file: key exists, but metadata not found.", exc_info=True)
-			raise ExceptionResponse.HTTPInternalServerError(
-				detail="Error retriving file.  See log.",
-			)
+        #check for file existance.
+        if metadata is None:
+            log.error("Problem in download_file: key exists, but metadata not found.", exc_info=True)
+            raise ExceptionResponse.HTTPInternalServerError(
+                detail="Error retriving file.  See log.",
+            )
 
-		fs = self.make_db_connection()
+        fs = self.make_db_connection()
 
-		#set up download
-		BLOCK_SIZE = 2**10 * 8  # 8kb
-		#foundFile = default_storage.open(path)
-		foundFile = fs.get(ObjectId(key))
-		app_iter = iter(partial(foundFile.read, BLOCK_SIZE), '')
+        #set up download
+        BLOCK_SIZE = 2**10 * 8  # 8kb
+        #foundFile = default_storage.open(path)
+        foundFile = fs.get(ObjectId(key))
+        app_iter = iter(partial(foundFile.read, BLOCK_SIZE), '')
 
-		return Response(
-			app_iter =             app_iter,
-			content_type =         metadata.mimetype,
-			content_disposition = "attachment; filename=" + metadata.filename
-		)
+        return Response(
+            app_iter =             app_iter,
+            content_type =         metadata.mimetype,
+            content_disposition = "attachment; filename=" + metadata.filename
+        )
 
-	#TODO: Filename based on requestor and submittor
-	def download_zipped(self, filelist, filename="assignment"):
-		"""Return a response containg all files for this submission in
-		a zip file.
+    #TODO: Filename based on requestor and submittor
+    def download_zipped(self, filelist, filename="assignment"):
+        """Return a response containg all files for this submission in
+        a zip file.
 
-		Arguments:
-		filelist: a list of all files for this students submission.
-		filename: the name of the zip file.
-		"""
-		assert filelist is not None
+        Arguments:
+        filelist: a list of all files for this students submission.
+        filename: the name of the zip file.
+        """
+        assert filelist is not None
 
-		if (len(filelist) == 0 or filelist is None):
-			raise ExceptionResponse.HTTPNotFound(
-				detail="No files found",
-				comment='There are no files of that type available.'
-			)
+        if (len(filelist) == 0 or filelist is None):
+            raise ExceptionResponse.HTTPNotFound(
+                detail="No files found",
+                comment='There are no files of that type available.'
+            )
 
-		#buffer to create zip file in memory.
-		buff = StringIO.StringIO()
-		assignment_zip = ZipFile(buff, mode='w')
+        #buffer to create zip file in memory.
+        buff = StringIO.StringIO()
+        assignment_zip = ZipFile(buff, mode='w')
 
-		fs = self.make_db_connection()
+        fs = self.make_db_connection()
 
-		#pack assignment submission into a zip file.
-		for key, metadata in get_file_metadata(filelist).iteritems():
-			afile = fs.get(ObjectId(key))
+        #pack assignment submission into a zip file.
+        for key, metadata in get_file_metadata(filelist).iteritems():
+            afile = fs.get(ObjectId(key))
 
-			assignment_zip.writestr(metadata.filename, afile.read())
+            assignment_zip.writestr(metadata.filename, afile.read())
 
-		assignment_zip.close()
-		buff.seek(0)
+        assignment_zip.close()
+        buff.seek(0)
 
-		return Response(
-			body =                buff.read(),
-			content_type =        'application/zip',
-			content_disposition = 'attachment; filename=' + filename + '.zip'
-		)
+        return Response(
+            body =                buff.read(),
+            content_type =        'application/zip',
+            content_disposition = 'attachment; filename=' + filename + '.zip'
+        )
 
-	def delete_file(self, filelist, key):
-		"""Removes an uploaded file from the assignment
+    def delete_file(self, filelist, key):
+        """Removes an uploaded file from the assignment
 
-		Arguments:
-		filelist: A dictionary containint file metadata.
-		key:      holds the key hash of the file to be deleted.
-		"""
-		if key not in filelist:
-			return filelist
-		else:
-			metadata = get_file_metadata(filelist, ObjectId(key))
+        Arguments:
+        filelist: A dictionary containint file metadata.
+        key:      holds the key hash of the file to be deleted.
+        """
+        if key not in filelist:
+            return filelist
+        else:
+            metadata = get_file_metadata(filelist, ObjectId(key))
 
-		fs = self.make_db_connection()
+        fs = self.make_db_connection()
 
-		fs.delete(ObjectId(key))
-		del filelist[key]
+        fs.delete(ObjectId(key))
+        del filelist[key]
 
-		return filelist
+        return filelist
 
-	def delete_all(self, filelist):
-		"""Removes all files in the supplied filelist
+    def delete_all(self, filelist):
+        """Removes all files in the supplied filelist
 
-		Arguments:
-		filelist: A dictionary containint file metadata.
-		"""
-		for key in filelist.keys():
-			self.delete_file(filelist, ObjectId(key))
+        Arguments:
+        filelist: A dictionary containint file metadata.
+        """
+        for key in filelist.keys():
+            self.delete_file(filelist, ObjectId(key))
 
-	def make_db_connection():
-		"""Opens a connection to MongoDB for this assignments submissions.
-		"""
-		_db = pymongo.database.Database(
-			pymongo.MongoClient(
-				host='localhost',
-				port=27017,
-				document_class=dict,
-			),
-			"edx_mfu"
-		)
+    def make_db_connection():
+        """Opens a connection to MongoDB for this assignments submissions.
+        """
+        _db = pymongo.database.Database(
+            pymongo.MongoClient(
+                host='localhost',
+                port=27017,
+                document_class=dict,
+            ),
+            "edx_mfu"
+        )
 
-		return gridfs.GridFS(
-			_db, 
-			"fs.{0}".format(self.location.to_depreciated_string())
-		)    
+        return gridfs.GridFS(
+            _db, 
+            "fs.{0}".format(self.location.to_depreciated_string())
+        )    
 
 def get_file_metadata(filelist, hash = None):
-	"""Wraps file metadata in a FileMetaData tuple.
-	Returns all files, or a single file specified by hash.
+    """Wraps file metadata in a FileMetaData tuple.
+    Returns all files, or a single file specified by hash.
 
-	Arguments:
-	filelist: a list of file metadata.
-	suffix:   (optional) the hash of the desired file.
-	"""
-	if filelist is None: #no files => emply dict
-		return dict()
-	elif hash is None: #return all files.
-		return {key: FileMetaData._make(metadata) 
-			for (key, metadata) in filelist.iteritems()}
-	else:
-		if hash not in filelist: #no matching file
-			return None
-		else: #return one file.
-			return FileMetaData._make(filelist[hash])
+    Arguments:
+    filelist: a list of file metadata.
+    suffix:   (optional) the hash of the desired file.
+    """
+    if filelist is None: #no files => emply dict
+        return dict()
+    elif hash is None: #return all files.
+        return {key: FileMetaData._make(metadata) 
+            for (key, metadata) in filelist.iteritems()}
+    else:
+        if hash not in filelist: #no matching file
+            return None
+        else: #return one file.
+            return FileMetaData._make(filelist[hash])
 
 def _now():
-	return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+    return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
