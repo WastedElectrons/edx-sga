@@ -108,7 +108,7 @@ class FileSubmissionMixin(XBlockMixin):
         """
         return self.download_zipped(
             self.uploaded_files,
-            self.display_name + "assignment"
+            "{}".format(self.display_name)
         )
 
     @XBlock.handler
