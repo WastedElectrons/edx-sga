@@ -240,7 +240,7 @@ class MultipleFileUploadXBlock(
             annotatedData = get_file_metadata(state.get("annotated_files"))
             for sha1, metadata in annotatedData.iteritems():
                 annotated.append({
-                    "sha1":      sha1, 
+                    "sha1":      sha1,
                     "filename":  metadata.filename,
                     "timestamp": metadata.timestamp
                 })
@@ -354,7 +354,7 @@ class MultipleFileUploadXBlock(
 
         return Response(status=204)
 
-    @XBlock.handler 
+    @XBlock.handler
     def staff_reopen_submission(self, request, suffix=''):
         """Allows staff to unsubmit a submission for the student.
         """
@@ -375,7 +375,7 @@ class MultipleFileUploadXBlock(
             return Response(status=403)
 
         # Get all student modules for this assingment
-        query=StudentModule.objects.filter(
+        query = StudentModule.objects.filter(
             course_id=self.xmodule_runtime.course_id,
             module_state_key=self.location
         )
@@ -508,7 +508,7 @@ class MultipleFileUploadXBlock(
         module_id: the id of the student module to retrive
         """
         assert self.is_course_staff()
-        module=StudentModule.objects.get(pk=module_id)
+        module = StudentModule.objects.get(pk=module_id)
         return json.loads(module.state)
 
     def is_course_staff(self):
@@ -531,8 +531,9 @@ class MultipleFileUploadXBlock(
             if 'module_id' not in request.params:
                 raise ExceptionResponse.HTTPBadRequest(
                     detail='No module id was sent.',
-                    comment='staff must send student module id with requests involing students.'
-                    )                   
+                    comment='staff must send student module id with'
+                            'requests involing students.'
+                )
 
 
 def _resource(path):  # pragma: NO COVER
