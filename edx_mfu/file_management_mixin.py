@@ -10,14 +10,15 @@ import mimetypes
 import pkg_resources
 import pytz
 
-from xblock.core import XBlock
-from xblock.fields import XBlockMixin
+# from xblock.core import XBlock
+# from xblock.fields import XBlockMixin
 
 from webob.response import Response
 import webob.exc as ExceptionResponse
 
 from django.core.files import File
 
+# For storing files to MongoDB
 import pymongo
 import gridfs
 from bson import ObjectId
@@ -81,7 +82,8 @@ class FileManagementMixin(object):
 
         #check for file existance.
         if metadata is None:
-            log.error("Problem in download_file: key exists, but metadata not found.", exc_info=True)
+            log.error("Problem in download_file: key exists, but "
+                      "metadata not found.", exc_info=True)
             raise ExceptionResponse.HTTPInternalServerError(
                 detail="Error retriving file.  See log.",
             )
@@ -97,7 +99,8 @@ class FileManagementMixin(object):
         return Response(
             app_iter =             app_iter,
             content_type =         metadata.mimetype,
-            content_disposition = "attachment; filename=" + metadata.filename
+            content_disposition = 
+                "attachment; filename= {}".format(metadata.filename) 
         )
 
     #TODO: Filename based on requestor and submittor
@@ -135,7 +138,8 @@ class FileManagementMixin(object):
         return Response(
             body =                buff.read(),
             content_type =        'application/zip',
-            content_disposition = 'attachment; filename=' + filename + '.zip'
+            content_disposition = 
+                'attachment; filename={}.zip'.format(filename)
         )
 
     def delete_file(self, filelist, key):
@@ -179,7 +183,7 @@ class FileManagementMixin(object):
         )
 
         return gridfs.GridFS(
-            _db, 
+            _db,
             "fs.{0}".format(self.location.to_depreciated_string())
         )    
 
@@ -194,7 +198,7 @@ def get_file_metadata(filelist, hash = None):
     if filelist is None: #no files => emply dict
         return dict()
     elif hash is None: #return all files.
-        return {key: FileMetaData._make(metadata) 
+        return {key: FileMetaData._make(metadata)
             for (key, metadata) in filelist.iteritems()}
     else:
         if hash not in filelist: #no matching file

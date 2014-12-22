@@ -32,8 +32,9 @@ class FileAnnotationMixin(XBlockMixin):
         display_name="Uploaded Files",
         scope=Scope.user_state,
         default=dict(),
-        help="Files uploaded by the user. Tuple of filename, mimetype and timestamp"
-    )   
+        help="Files uploaded by the user. Tuple of filename, mimetype "
+             "and timestamp"
+    )
 
     @XBlock.handler
     def staff_upload_annotated(self, request, suffix=''):
@@ -44,14 +45,13 @@ class FileAnnotationMixin(XBlockMixin):
         annotated_list = self.annotated_file_list(module_id)
 
         key, uploaded = self.upload_file(
-            annotated_list, 
+            annotated_list,
             request.params['uploadedFile']
         )
 
-        #need to save state sepratly as user is instructor
-        #annotated_list[key] = uploaded
+        # Need to save state sepratly as user is instructor
         self.set_student_state(
-            module_id, 
+            module_id,
             annotated_files=annotated_list
         )
 
@@ -82,11 +82,11 @@ class FileAnnotationMixin(XBlockMixin):
         self.validate_staff_request(request)
 
         return self.download_file(
-            self.annotated_file_list(request.params['module_id']), 
+            self.annotated_file_list(request.params['module_id']),
             suffix
         )
     
-    #For downloading the entire assingment for one student.
+    # For downloading the entire assingment for one student.
     @XBlock.handler
     def staff_download_annotated_zipped(self, request, suffix=''):
         """Returns all annotated files in a zip file.
@@ -95,14 +95,13 @@ class FileAnnotationMixin(XBlockMixin):
         request: holds the module_id for a student module.
         suffix:  not used.
         """
-        #assert self.is_course_staff()
         self.validate_staff_request(request)
 
         module = StudentModule.objects.get(pk=request.params['module_id'])
         state = json.loads(module.state)
 
         return self.download_zipped(
-            state['annotated_files'], 
+            state['annotated_files'],
             self.display_name + "-" + module.student.username + "annotated"
         )
 
@@ -115,13 +114,16 @@ class FileAnnotationMixin(XBlockMixin):
         suffix:  not used.
         """
         return self.download_zipped(
-            self.annotated_files, 
+            self.annotated_files,
             self.display_name + "-annotated"
         )
 
     @XBlock.handler
     def staff_delete_annotated(self, request, suffix=''):
-        """
+        """Allows staff to remove an annotated file from a submission.
+        Arguments:
+        request: holds the module_id for a student module.
+        suffix:  the key for the file to be deleted.
         """
         self.validate_staff_request(request)
 
@@ -130,7 +132,7 @@ class FileAnnotationMixin(XBlockMixin):
         newFilelist = self.delete_file(filelist, suffix)
 
         self.set_student_state(
-            module_id, 
+            module_id,
             annotated_files=newFilelist
         )
 

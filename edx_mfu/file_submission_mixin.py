@@ -13,7 +13,7 @@ import pytz
 
 from courseware.models import StudentModule
 
-from xblock.core import XBlock
+# from xblock.core import XBlock
 from xblock.fields import XBlockMixin, Scope, Dict
 
 from webob.response import Response
@@ -45,12 +45,12 @@ class FileSubmissionMixin(XBlockMixin):
         """
 
         key, uploaded = self.upload_file(
-            self.uploaded_files, 
+            self.uploaded_files,
             request.params['uploadedFile']
         )
         
         return Response(json_body={
-            "sha1":      key, 
+            "sha1":      key,
             "filename":  uploaded.filename,
             "timestamp": uploaded.timestamp
         })
@@ -93,7 +93,7 @@ class FileSubmissionMixin(XBlockMixin):
         module_id = request.params['module_id'];
         module = self.get_module(module_id)
         return self.download_zipped(
-            self.uploaded_file_list(module_id), 
+            self.uploaded_file_list(module_id),
             self.display_name + "-" + module.student.username
         )
 
@@ -106,7 +106,7 @@ class FileSubmissionMixin(XBlockMixin):
         suffix:  not used.
         """
         return self.download_zipped(
-            self.uploaded_files, 
+            self.uploaded_files,
             self.display_name + "assignment"
         )
 
@@ -137,7 +137,7 @@ class FileSubmissionMixin(XBlockMixin):
 
         newFilelist = self.delete_file(uploaded, suffix)
         self.set_student_state(
-            module_id, 
+            module_id,
             uploaded_files = newFilelist
         )
 
