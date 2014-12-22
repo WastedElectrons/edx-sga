@@ -144,8 +144,8 @@ function MultipleFileUploadXBlock(runtime, element)
                     var url = reopenAllSubmissionsUrl;
                     
                     $.get(url).success(function() {
-                        allStudentData.assignments.each(function() {
-                            reopenSubmission(this);
+                        $.each(allStudentData.assignments, function(i, val) {
+                            reopenSubmission(val);
                         });
 
                         renderStaffGrading(allStudentData);
