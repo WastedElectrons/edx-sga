@@ -103,7 +103,10 @@ class FileAnnotationMixin(XBlockMixin):
 
         return self.download_zipped(
             state['annotated_files'],
-            "{}-{}-annotated".format(self.display_name, module.student.username)
+            "{}-{}-annotated".format(
+                self.display_name.replace(" ","_"),
+                module.student.username
+            )
         )
 
     @XBlock.handler
@@ -116,7 +119,7 @@ class FileAnnotationMixin(XBlockMixin):
         """
         return self.download_zipped(
             self.annotated_files,
-            "{}-annotated".format(self.display_name)
+            "{}-annotated".format(self.display_name.replace(" ","_"))
         )
 
     @XBlock.handler
