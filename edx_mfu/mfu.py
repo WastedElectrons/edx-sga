@@ -145,7 +145,7 @@ class MultipleFileUploadXBlock(
             context['is_course_staff'] = True
             self.update_staff_debug_context(context)
 
-        fragment=Fragment()
+        fragment = Fragment()
         fragment.add_content(
             render_template(
                 'templates/multiple_file_upload/show.html',
@@ -154,13 +154,13 @@ class MultipleFileUploadXBlock(
         )
         fragment.add_css(_resource("static/css/edx_mfu.css"))
         fragment.add_javascript(_resource("static/js/src/edx_mfu.js"))
-        fragment.add_javascript_url("/static/js/vendor/date.js")        
+        fragment.add_javascript_url("/static/js/vendor/date.js")
         fragment.initialize_js('MultipleFileUploadXBlock')
         return fragment
 
     def update_staff_debug_context(self, context):
         """
-        Gathers information for the Staff Debug Info button on 
+        Gathers information for the Staff Debug Info button on
         the lms page.
         """
         published = self.published_date
@@ -220,23 +220,25 @@ class MultipleFileUploadXBlock(
             submitted = state.get('is_submitted')
             submission_time = state.get('submission_time')
 
-            #can a grade be entered
+            #can a grade be entered?
             due = get_extended_due_date(self)
             may_grade = (instructor or not approved) 
             if due is not None:
-                may_grade=may_grade and (submitted or (due < _now())) 
+                may_grade = may_grade and (submitted or (due < _now()))
 
             uploaded = []
             if (state.get('is_submitted')):
-                for sha1, metadata in get_file_metadata(state.get("uploaded_files")).iteritems():
+                uploadData = get_file_metadata(state.get("uploaded_files"))
+                for sha1, metadata in uploadedData.iteritems():
                     uploaded.append({
-                        "sha1":      sha1, 
+                        "sha1":      sha1,
                         "filename":  metadata.filename,
                         "timestamp": metadata.timestamp
                     })
 
             annotated = []
-            for sha1, metadata in get_file_metadata(state.get("annotated_files")).iteritems():
+            annotatedData = get_file_metadata(state.get("annotated_files"))
+            for sha1, metadata in annotatedData.iteritems():
                 annotated.append({
                     "sha1":      sha1, 
                     "filename":  metadata.filename,
