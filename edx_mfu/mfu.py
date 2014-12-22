@@ -22,7 +22,7 @@ from file_annotation_mixin import FileAnnotationMixin
 
 from courseware.models import StudentModule
 
-from django.core.files import File
+#from django.core.files import File
 from django.template import Context, Template
 
 from webob.response import Response
