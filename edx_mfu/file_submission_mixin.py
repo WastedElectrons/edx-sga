@@ -19,8 +19,8 @@ from xblock.fields import XBlockMixin, Scope, Dict
 from webob.response import Response
 
 from django.core.files import File
-from django.core.files.storage import default_storage
-from django.template import Context, Template
+#from django.core.files.storage import default_storage
+#from django.template import Context, Template
 
 log = logging.getLogger(__name__)
 
