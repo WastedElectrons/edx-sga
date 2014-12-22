@@ -195,16 +195,17 @@ def get_file_metadata(filelist, hash=None):
     filelist: a list of file metadata.
     suffix:   (optional) the hash of the desired file.
     """
-    if filelist is None: #no files => emply dict
+    if filelist is None:  # no files => emply dict
         return dict()
-    elif hash is None: #return all files.
+    elif hash is None:  # return all files.
         return {key: FileMetaData._make(metadata)
-            for (key, metadata) in filelist.iteritems()}
+                for (key, metadata) in filelist.iteritems()}
     else:
-        if hash not in filelist: #no matching file
+        if hash not in filelist:  # no matching file
             return None
-        else: #return one file.
+        else:  # return one file.
             return FileMetaData._make(filelist[hash])
+
 
 def _now():
     return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
