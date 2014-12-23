@@ -120,7 +120,7 @@ function MultipleFileUploadXBlock(runtime, element)
             //set up annotated file submision modal
             $(element).find(".manage-annotated-button")
                 .leanModal({closeButton: "#manage-annotated-exit"})
-                .on("click", handleManageAnnotated);`
+                .on("click", handleManageAnnotated);
 
             //all submission control
             $(element).find(".remove-all-submissions-button")
