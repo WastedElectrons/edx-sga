@@ -129,7 +129,6 @@ function MultipleFileUploadXBlock(runtime, element)
                     renderStaffConfirm( 
                         "Remove all submission data for all students (all files will be deleted)?",
                         function () {
-                        
                         $.get(removeAllSubmissionsUrl).success(function() {
                             $.each(allStudentData.assignments, function(i, val) {
                                 removeSubmission(val);
@@ -160,7 +159,6 @@ function MultipleFileUploadXBlock(runtime, element)
                     renderStaffConfirm( 
                         "Remove all submissions?",
                         function () {
-                        
                         $.get(reopenAllSubmissionsUrl).success(function() {
                             $.each(allStudentData.assignments, function(i, val) {
                                 reopenSubmission(val);
