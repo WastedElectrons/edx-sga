@@ -133,7 +133,7 @@ function MultipleFileUploadXBlock(runtime, element)
                         $.get(removeAllSubmissionsUrl).success(function() {
                             $.each(allStudentData.assignments, function(i, val) {
                                 removeSubmission(val);
-                            };
+                            });
 
                             renderStaffGrading(allStudentData);
                         });
@@ -156,18 +156,20 @@ function MultipleFileUploadXBlock(runtime, element)
             //reopen all submissions for the asingment.
             $(element).find(".reopen-all-submissions-button")
                 .leanModal({closeButton: '#confirm-exit'})
-                .on("click", renderStaffConfirm( 
-                    "Remove all submissions?",
-                    function () {
-                    
-                    $.get(reopenAllSubmissionsUrl).success(function() {
-                        $.each(allStudentData.assignments, function(i, val) {
-                            reopenSubmission(val);
-                        });
+                .on("click", function() {
+                    renderStaffConfirm( 
+                        "Remove all submissions?",
+                        function () {
+                        
+                        $.get(reopenAllSubmissionsUrl).success(function() {
+                            $.each(allStudentData.assignments, function(i, val) {
+                                reopenSubmission(val);
+                            });
 
-                        renderStaffGrading(allStudentData);
+                            renderStaffGrading(allStudentData);
+                        });
                     });
-                }));
+                });
 /*                .on("click", function()
                 {
                     var url = reopenAllSubmissionsUrl;
