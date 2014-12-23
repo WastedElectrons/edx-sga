@@ -131,14 +131,14 @@ function MultipleFileUploadXBlock(runtime, element)
                         function () {
                         
                         $.get(removeAllSubmissionsUrl).success(function() {
-                            allStudentData.assignments.each(
-                                removeSubmission(this)
-                            );
+                            $.each(allStudentData.assignments, function(i, val) {
+                                removeSubmission(val);
+                            };
 
                             renderStaffGrading(allStudentData);
                         });
                     });
-                }));
+                });
 /*                .on("click", function()
                 {
                     var url = removeAllSubmissionsUrl;
@@ -159,9 +159,8 @@ function MultipleFileUploadXBlock(runtime, element)
                 .on("click", renderStaffConfirm( 
                     "Remove all submissions?",
                     function () {
-                    var url = reopenAllSubmissionsUrl;
                     
-                    $.get(url).success(function() {
+                    $.get(reopenAllSubmissionsUrl).success(function() {
                         $.each(allStudentData.assignments, function(i, val) {
                             reopenSubmission(val);
                         });
