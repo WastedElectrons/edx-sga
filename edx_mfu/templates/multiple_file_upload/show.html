@@ -184,13 +184,13 @@
             </a></p>
 
             <% if (assignment.uploaded.length > 0) { %>
-              <p><a class="remove-submission-button" href="{{ id }}-confirm">
+              <p><a class="remove-submission-button" href="#{{ id }}-confirm">
                 {% trans "Remove Submission" %}
               </a></p>
             <% } %>
 
             <% if (assignment.submitted) { %>
-              <p><a class="reopen-submission-button" href="{{ id }}-confirm">
+              <p><a class="reopen-submission-button" href="#{{ id }}-confirm">
                 {% trans "Reopen Submission" %}
               </a></p>
             <% } %>
@@ -209,12 +209,12 @@
         <td></td>
         <td></td>
         <td>
-          <a class="remove-all-submissions-button" href="{{ id }}-confirm">
+          <a class="remove-all-submissions-button" href="#{{ id }}-confirm">
                 {% trans "Remove All Submissions" %}
           </a>
         </td>
         <td>
-          <a class="reopen-all-submissions-button" href="{{ id }}-confirm">
+          <a class="reopen-all-submissions-button" href="#{{ id }}-confirm">
                 {% trans "Reopen All Submissions" %}
           </a>
         </td>
