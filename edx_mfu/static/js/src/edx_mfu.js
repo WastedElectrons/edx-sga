@@ -136,8 +136,8 @@ function MultipleFileUploadXBlock(runtime, element)
                             );
 
                             renderStaffGrading(allStudentData);
-                        }});
-                    );
+                        });
+                    });
                 }));
 /*                .on("click", function()
                 {
