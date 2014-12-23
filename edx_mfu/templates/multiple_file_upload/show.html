@@ -97,6 +97,20 @@
   <div id="mfu-content">
   </div>
 
+  <section aria-hidden="true" class="modal confirm-modal" id="{{ id }}-confirm" style="height: 75%">
+    <div class="inner-wrapper" style="color: black">
+      <div style="display: block;">
+        <p><span id="confirm-message"></span></p>
+        <button type="button" id="confirm-accept">
+          {% trans "Yes" %}
+        </button>
+        <button type="button" id="confirm-exit">
+          {% trans "No" %}
+        </button>
+      </div>
+    </div>
+  </section>
+
 {% if is_course_staff %}
   <script type="text/template" id="mfu-grading-tmpl">
     <table class="gridtable">
@@ -170,13 +184,13 @@
             </a></p>
 
             <% if (assignment.uploaded.length > 0) { %>
-              <p><a class="remove-submission-button" href="#{{ id }}-remove-submission">
+              <p><a class="remove-submission-button" href="{{ id }}-confirm">
                 {% trans "Remove Submission" %}
               </a></p>
             <% } %>
 
             <% if (assignment.submitted) { %>
-              <p><a class="reopen-submission-button" href="#{{ id }}-reopen-submission">
+              <p><a class="reopen-submission-button" href="{{ id }}-confirm">
                 {% trans "Reopen Submission" %}
               </a></p>
             <% } %>
@@ -186,7 +200,7 @@
 
       </tr>
       <% } %>
-      
+
       <tr>
         <td></td>
         <td></td>
@@ -195,12 +209,12 @@
         <td></td>
         <td></td>
         <td>
-          <a class="remove-all-submissions-button" href="#command-remove-submission">
+          <a class="remove-all-submissions-button" href="{{ id }}-confirm">
                 {% trans "Remove All Submissions" %}
           </a>
         </td>
         <td>
-          <a class="reopen-all-submissions-button" href="#command-reopen-submission">
+          <a class="reopen-all-submissions-button" href="{{ id }}-confirm">
                 {% trans "Reopen All Submissions" %}
           </a>
         </td>

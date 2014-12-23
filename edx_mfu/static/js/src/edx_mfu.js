@@ -99,7 +99,7 @@ function MultipleFileUploadXBlock(runtime, element)
 
             // Add download urls to template context
             data.downloadUrl = staffDownloadUrl;
-            data.downloadZippedUrl = staffDownloadZippedUrl;            //data.removeSubmissionUrl = removeSubmissionUrl;
+            data.downloadZippedUrl = staffDownloadZippedUrl;  
 
             // Render template
             $(element).find("#grade-info")
@@ -124,7 +124,21 @@ function MultipleFileUploadXBlock(runtime, element)
 
             //all submission control
             $(element).find(".remove-all-submissions-button")
-                .on("click", function()
+                .leanModal({closeButton: '#confirm-exit'})
+                .on("click", renderStaffConfirm( 
+                    "Remove all submission data for all students (all files will be deleted)?",
+                    function () {
+                    var url = removeAllSubmissionsUrl;
+                    
+                    $.get(url).success(function() {
+                        allStudentData.assignments.each(
+                            removeSubmission(this)
+                        );
+
+                        renderStaffGrading(allStudentData);
+                    });
+                }));
+/*                .on("click", function()
                 {
                     var url = removeAllSubmissionsUrl;
                     
@@ -135,11 +149,26 @@ function MultipleFileUploadXBlock(runtime, element)
 
                         renderStaffGrading(allStudentData);
                     });
-                });
+                });*/
+
 
             //reopen all submissions for the asingment.
             $(element).find(".reopen-all-submissions-button")
-                .on("click", function()
+                .leanModal({closeButton: '#confirm-exit'})
+                .on("click", renderStaffConfirm( 
+                    "Remove all submissions?",
+                    function () {
+                    var url = reopenAllSubmissionsUrl;
+                    
+                    $.get(url).success(function() {
+                        $.each(allStudentData.assignments, function(i, val) {
+                            reopenSubmission(val);
+                        });
+
+                        renderStaffGrading(allStudentData);
+                    });
+                }));
+/*                .on("click", function()
                 {
                     var url = reopenAllSubmissionsUrl;
                     
@@ -150,11 +179,26 @@ function MultipleFileUploadXBlock(runtime, element)
 
                         renderStaffGrading(allStudentData);
                     });
-                });
+                });*/
 
             //Remove a submission, including grades and files.
             $(element).find(".remove-submission-button")
-                .on("click", function()
+                .leanModal({closeButton: '#confirm-exit'})
+                .on("click", renderStaffConfirm(
+                    "Remove this submission?",
+                    function () {
+                    var module_id = $(this).parents("tr").data("module_id");
+                    var url = removeSubmissionUrl + "?module_id=" + module_id;
+                    
+                    $.get(url).success(function() {
+                        removeSubmission($.grep(allStudentData.assignments, function(e) {
+                            return e.module_id == module_id;
+                        })[0]);
+
+                        renderStaffGrading(allStudentData);
+                    });
+                }));
+/*                .on("click", function()
                 {
                     var module_id = $(this).parents("tr").data("module_id");
                     var url = removeSubmissionUrl + "?module_id=" + module_id;
@@ -166,11 +210,26 @@ function MultipleFileUploadXBlock(runtime, element)
 
                         renderStaffGrading(allStudentData);
                     });
-                });
+                });*/
 
             //reopens a submission for a student.  Clears previous grade.
             $(element).find(".reopen-submission-button")
-                .on("click", function()
+                .leanModal({closeButton: '#confirm-exit'})
+                .on("click", renderStaffConfirm(
+                    "Reopen this submission?",
+                    function () {
+                    var module_id = $(this).parents("tr").data("module_id");
+                    var url = reopenSubmissionUrl + "?module_id=" + module_id;
+                    
+                    $.get(url).success(function() {
+                        reopenSubmission($.grep(allStudentData.assignments, function(e) {
+                            return e.module_id == module_id;
+                        })[0]);
+
+                        renderStaffGrading(allStudentData);
+                    });
+                }));
+/*                .on("click", function()
                 {
                     var module_id = $(this).parents("tr").data("module_id");
                     var url = reopenSubmissionUrl + "?module_id=" + module_id;
@@ -182,7 +241,7 @@ function MultipleFileUploadXBlock(runtime, element)
 
                         renderStaffGrading(allStudentData);
                     });
-                });
+                });*/
 
             //All upload, download and delete for annotated files
             function handleManageAnnotated() 
@@ -306,7 +365,11 @@ function MultipleFileUploadXBlock(runtime, element)
             }
         }
 
-
+        function renderStaffConfirm(message, callback)
+        {
+            $("#confirm-message").text(message);
+            $("#confirm-accept").on("click", callback);
+        }
 
         //reset a submission, removing all files and grades.
         function removeSubmission(submission)
@@ -350,14 +413,6 @@ function MultipleFileUploadXBlock(runtime, element)
 
             handleFilelist(filelistDiv, state)
 
-/*            var renderFileList = function(element)
-            {
-                return function(){
-                    handleFilelist(element, state);
-                };
-            }(parent.find('.filelist'));*/
-
-            //renderFileList();
             fileuploadDiv.html(uploadTemplate(state));
 
             fileuploadDiv.find(".fileupload").fileupload({
