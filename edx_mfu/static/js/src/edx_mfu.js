@@ -365,10 +365,10 @@ function MultipleFileUploadXBlock(runtime, element)
             }
         }
 
-        function renderStaffConfirm(message, callback)
+        function renderStaffConfirm(message, action)
         {
             $("#confirm-message").text(message);
-            $("#confirm-accept").on("click", callback);
+            $("#confirm-accept").on("click", action);
         }
 
         //reset a submission, removing all files and grades.
