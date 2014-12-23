@@ -120,23 +120,24 @@ function MultipleFileUploadXBlock(runtime, element)
             //set up annotated file submision modal
             $(element).find(".manage-annotated-button")
                 .leanModal({closeButton: "#manage-annotated-exit"})
-                .on("click", handleManageAnnotated);
+                .on("click", handleManageAnnotated);`
 
             //all submission control
             $(element).find(".remove-all-submissions-button")
                 .leanModal({closeButton: '#confirm-exit'})
-                .on("click", renderStaffConfirm( 
-                    "Remove all submission data for all students (all files will be deleted)?",
-                    function () {
-                    var url = removeAllSubmissionsUrl;
-                    
-                    $.get(url).success(function() {
-                        allStudentData.assignments.each(
-                            removeSubmission(this)
-                        );
+                .on("click", function() {
+                    renderStaffConfirm( 
+                        "Remove all submission data for all students (all files will be deleted)?",
+                        function () {
+                        
+                        $.get(removeAllSubmissionsUrl).success(function() {
+                            allStudentData.assignments.each(
+                                removeSubmission(this)
+                            );
 
-                        renderStaffGrading(allStudentData);
-                    });
+                            renderStaffGrading(allStudentData);
+                        }});
+                    );
                 }));
 /*                .on("click", function()
                 {
@@ -307,7 +308,7 @@ function MultipleFileUploadXBlock(runtime, element)
                 form.find("#comment-input").text(studentData.comment);
 
                 form.off("submit").on("submit", function(event) {
-                    var max_score = allStudentData.max_score;//row.parents("#grade-info").data("max_score");
+                    var max_score = allStudentData.max_score;
                     var score = Number(form.find("#grade-input").val());
                     event.preventDefault();
 
@@ -526,6 +527,7 @@ function MultipleFileUploadXBlock(runtime, element)
         });
     }
 
+    //TODO: add datejs support
     if (require === undefined) { 
         /** 
          * The LMS does not use require.js (although it loads it...) and
@@ -539,6 +541,7 @@ function MultipleFileUploadXBlock(runtime, element)
                 .attr("src", url)
                 .appendTo(element);
         }
+
         loadjs("/static/js/vendor/jQuery-File-Upload/js/jquery.iframe-transport.js");
         loadjs("/static/js/vendor/jQuery-File-Upload/js/jquery.fileupload.js");
         xblock($, _);
