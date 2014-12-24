@@ -97,20 +97,6 @@
   <div id="mfu-content">
   </div>
 
-  <section aria-hidden="true" class="modal confirm-modal" id="{{ id }}-confirm">
-    <div class="inner-wrapper" style="color: black">
-      <div style="display: block;">
-        <p><span id="confirm-message"></span></p>
-        <button type="button" id="confirm-accept">
-          {% trans "Yes" %}
-        </button>
-        <button type="button" id="confirm-exit">
-          {% trans "No" %}
-        </button>
-      </div>
-    </div>
-  </section>
-
 {% if is_course_staff %}
   <script type="text/template" id="mfu-grading-tmpl">
     <table class="gridtable">
@@ -263,6 +249,20 @@
           {% endfor %}
         </table><br/>
         category = {{category}}
+      </div>
+    </div>
+  </section>
+
+  <section aria-hidden="true" class="modal confirm-modal" id="{{ id }}-confirm">
+    <div class="inner-wrapper" style="color: black">
+      <div style="display: block;">
+        <p><span id="confirm-message"></span></p>
+        <button type="button" id="confirm-accept">
+          {% trans "Yes" %}
+        </button>
+        <button type="button" id="confirm-exit">
+          {% trans "No" %}
+        </button>
       </div>
     </div>
   </section>
