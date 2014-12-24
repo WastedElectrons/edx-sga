@@ -122,7 +122,12 @@ function MultipleFileUploadXBlock(runtime, element)
                 .leanModal({closeButton: "#manage-annotated-exit"})
                 .on("click", handleManageAnnotated);
 
-            $("#confirm-dialog").leanModal({closeButton: '#confirm-exit'});
+            $("#confirm-dialog").leanModal({closeButton: '#confirm-exit'})
+                .on("click", function() {
+                    setTimeout(function() {
+                        $("#confirm-dialog").click(); 
+                    }, 225);
+                });
 
             //all submission control
             $(element).find(".remove-all-submissions-button")
