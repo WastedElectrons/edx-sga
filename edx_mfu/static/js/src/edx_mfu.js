@@ -128,7 +128,7 @@ function MultipleFileUploadXBlock(runtime, element)
             $(element).find(".remove-all-submissions-button")
                 .leanModal({closeButton: '#confirm-exit'})
                 .on("click", function() {
-                    renderStaffConfirm( 
+                    renderConfirm( 
                         "Remove all submission data for all students (all files will be deleted)?",
                         function () {
                         $.get(removeAllSubmissionsUrl).success(function() {
@@ -145,7 +145,7 @@ function MultipleFileUploadXBlock(runtime, element)
             //reopen all submissions for the asingment.
             $(element).find(".reopen-all-submissions-button")
                 .on("click", function() {
-                    renderStaffConfirm( 
+                    renderConfirm( 
                         "Remove all submissions?",
                         function () {
                         $.get(reopenAllSubmissionsUrl).success(function() {
@@ -160,36 +160,40 @@ function MultipleFileUploadXBlock(runtime, element)
 
             //Remove a submission, including grades and files.
             $(element).find(".remove-submission-button")
-                .on("click", renderStaffConfirm(
-                    "Remove this submission?",
-                    function () {
-                    var module_id = $(this).parents("tr").data("module_id");
-                    var url = removeSubmissionUrl + "?module_id=" + module_id;
-                    
-                    $.get(url).success(function() {
-                        removeSubmission($.grep(allStudentData.assignments, function(e) {
-                            return e.module_id == module_id;
-                        })[0]);
+                .on("click", function() {
+                    renderConfirm(
+                        "Remove this submission?",
+                        function () {
+                        var module_id = $(this).parents("tr").data("module_id");
+                        var url = removeSubmissionUrl + "?module_id=" + module_id;
+                        
+                        $.get(url).success(function() {
+                            removeSubmission($.grep(allStudentData.assignments, function(e) {
+                                return e.module_id == module_id;
+                            })[0]);
 
-                        renderStaffGrading(allStudentData);
+                            renderStaffGrading(allStudentData);
+                        });
                     });
                 }));
 
             //reopens a submission for a student.  Clears previous grade.
             $(element).find(".reopen-submission-button")
-                .on("click", renderStaffConfirm(
-                    "Reopen this submission?",
-                    function () {
-                    var module_id = $(this).parents("tr").data("module_id");
-                    var url = reopenSubmissionUrl + "?module_id=" + module_id;
-                    
-                    $.get(url).success(function() {
-                        reopenSubmission($.grep(allStudentData.assignments, function(e) {
-                            return e.module_id == module_id;
-                        })[0]);
+                .on("click", function() {
+                    renderConfirm(
+                        "Reopen this submission?",
+                        function () {
+                        var module_id = $(this).parents("tr").data("module_id");
+                        var url = reopenSubmissionUrl + "?module_id=" + module_id;
+                        
+                        $.get(url).success(function() {
+                            reopenSubmission($.grep(allStudentData.assignments, function(e) {
+                                return e.module_id == module_id;
+                            })[0]);
 
-                        renderStaffGrading(allStudentData);
-                    });
+                            renderStaffGrading(allStudentData);
+                        });
+                    )};
                 }));
 
             //All upload, download and delete for annotated files
@@ -314,7 +318,7 @@ function MultipleFileUploadXBlock(runtime, element)
             }
         }
 
-        function renderStaffConfirm(message, action)
+        function renderConfirm(message, action)
         {
             $("#confirm-message").text(message);
             $("#confirm-accept").on("click", action);
