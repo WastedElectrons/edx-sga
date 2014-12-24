@@ -388,6 +388,58 @@ class MultipleFileUploadXBlock(
         return Response(status=204)
 
     @XBlock.handler
+    def staff_close_all_submissions(self, request, suffix=''):
+        """Closes all submissions.
+        """
+        if not self.is_course_staff():
+            return Response(status=403)
+
+        # Get all student modules for this assingment
+        query = StudentModule.objects.filter(
+            course_id=self.xmodule_runtime.course_id,
+            module_state_key=self.location
+        )
+
+        for module in query:
+            self.set_student_state(
+                module.id,
+                is_submitted=True,
+                submission_time=str(_now())
+            )
+
+        return Response(status=204)
+
+    @XBlock.handler
+    def staff_open_submission(self, request, suffix=''):
+        """Unsubmits a student's submission.
+        """
+        if not self.is_course_staff():
+            return Response(status=403)
+
+        self.set_student_state(
+            request.params['module_id'],
+            is_submitted=False,
+            submission_time=None
+        )
+
+        return Response(status=204)
+
+    @XBlock.handler
+    def staff_close_submission(self, request, suffix=''):
+        """Closes a student's submissions.
+        """
+        if not self.is_course_staff():
+            return Response(status=403)
+
+        self.set_student_state(
+            request.params['module_id'],
+            is_submitted=True,
+            submission_time=str(_now())
+        )
+
+        return Response(status=204)
+
+    @XBlock.handler
     def staff_remove_submission(self, request, suffix=''):
         """Resets an assignment for the user and reopens it.
         """

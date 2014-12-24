@@ -24,7 +24,8 @@ function MultipleFileUploadXBlock(runtime, element)
         var enterGradeUrl = runtime.handlerUrl(element, 'staff_enter_grade');
         var removeGradeUrl = runtime.handlerUrl(element, 'staff_remove_grade');
         
-        var reopenSubmissionUrl = runtime.handlerUrl(element, 'staff_reopen_submission');
+        var openSubmissionUrl = runtime.handlerUrl(element, 'staff_open_submission');
+        var closeSubmissionUrl = runtime.handlerUrl(element, 'staff_close_submission')
         var removeSubmissionUrl = runtime.handlerUrl(element, 'staff_remove_submission')
         var reopenAllSubmissionsUrl = runtime.handlerUrl(element, 'staff_reopen_all_submissions');
         var removeAllSubmissionsUrl = runtime.handlerUrl(element, 'staff_remove_all_submissions');
@@ -124,6 +125,8 @@ function MultipleFileUploadXBlock(runtime, element)
                 .on("click", handleManageAnnotated);
 
             $("#confirm-dialog").leanModal({closeButton: '#confirm-exit'});
+            //leanModal has problems with nested modals.  This relaunches
+            //grade-modal when the confirm dialog box is left.
             $("#confirm-exit").on("click", function() {
                 setTimeout(function() {
                     $("#grade-submissions-button").click(); 
@@ -153,7 +156,7 @@ function MultipleFileUploadXBlock(runtime, element)
                     renderConfirm("Reopen all student submissions?", function () {
                         $.get(reopenAllSubmissionsUrl).success(function() {
                             $.each(allStudentData.assignments, function(i, val) {
-                                reopenSubmission(val);
+                                openSubmission(val);
                             });
 
                             renderStaffGrading(allStudentData);
@@ -167,8 +170,6 @@ function MultipleFileUploadXBlock(runtime, element)
                     var module_id = $(this).parents("tr").data("module_id");
                     var url = removeSubmissionUrl + "?module_id=" + module_id;
                     renderConfirm("Remove this submission?", function () {
-
-                        
                         $.get(url).success(function() {
                             removeSubmission($.grep(allStudentData.assignments, function(e) {
                                 return e.module_id == module_id;
@@ -180,18 +181,49 @@ function MultipleFileUploadXBlock(runtime, element)
                 });
 
             //reopens a submission for a student.  Clears previous grade.
-            $(element).find(".reopen-submission-button")
+/*            $(element).find(".reopen-submission-button")
                 .on("click", function() {
                     var module_id = $(this).parents("tr").data("module_id");
-                    var url = reopenSubmissionUrl + "?module_id=" + module_id;
+                    var url = openSubmissionUrl + "?module_id=" + module_id;
                     renderConfirm("Reopen this submission?", function () {    
                         $.get(url).success(function() {
-                            reopenSubmission($.grep(allStudentData.assignments, function(e) {
+                            openSubmission($.grep(allStudentData.assignments, function(e) {
                                 return e.module_id == module_id;
                             })[0]);
 
                             renderStaffGrading(allStudentData);
                         });
+                    });
+                });
+*/
+            //reopens a submission for a student.  Clears previous grade.
+            $(element).find(".toggle-submission-button")
+                .on("click", function() {
+                    var module_id = $(this).parents("tr").data("module_id");
+                    var openUrl = openSubmissionUrl + "?module_id=" + module_id;
+                    var closeUrl = closeSubmissionUrl + "?module_id=" + module_id;
+                    
+                    if(allStudentData.assignments[module_id].submitted)
+                    {
+                        $.get(openUrl).success(function() {
+                            openSubmission($.grep(allStudentData.assignments, function(e) {
+                                return e.module_id == module_id;
+                            })[0]);
+
+                            renderStaffGrading(allStudentData);
+                        });
+                    }
+                    else
+                    {
+                        $.get(closeUrl).success(function() {
+                            closeSubmission($.grep(allStudentData.assignments, function(e) {
+                                return e.module_id == module_id;
+                            })[0]);
+
+                            renderStaffGrading(allStudentData);
+                        });
+                    }
+
                     });
                 });
 
@@ -332,16 +364,23 @@ function MultipleFileUploadXBlock(runtime, element)
             submission.uploaded = [];
             submission.annotated = [];
 
-            reopenSubmission(submission);
+            openSubmission(submission);
             removeGrade(submission);
         }
 
         //reopen submission for student uploads
-        function reopenSubmission(submission)
+        function openSubmission(submission)
         {
             submission.submitted = false;
             submission.submitted_on = null;
             submission.may_grade = false;
+        }
+
+        function closeSubmission(submission)
+        {
+            submission.submitted = false;
+            submission.submitted_on = Date().now().toString();
+            submission.may_grade = true;
         }
 
         //remove a grade from a submission
