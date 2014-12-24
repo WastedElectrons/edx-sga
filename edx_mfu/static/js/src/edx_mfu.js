@@ -170,7 +170,7 @@ function MultipleFileUploadXBlock(runtime, element)
                             renderStaffGrading(allStudentData);
                         });
                     });
-                }));
+                });
 
             //reopens a submission for a student.  Clears previous grade.
             $(element).find(".reopen-submission-button")
@@ -187,7 +187,7 @@ function MultipleFileUploadXBlock(runtime, element)
                             renderStaffGrading(allStudentData);
                         });
                     )};
-                }));
+                });
 
             //All upload, download and delete for annotated files
             function handleManageAnnotated() 
