@@ -122,7 +122,7 @@ function MultipleFileUploadXBlock(runtime, element)
                 .leanModal({closeButton: "#manage-annotated-exit"})
                 .on("click", handleManageAnnotated);
 
-            $(".confirm-dialog").leanModal({closeButton: '#confirm-exit'});
+            $("#confirm-dialog").leanModal({closeButton: '#confirm-exit'});
 
             //all submission control
             $(element).find(".remove-all-submissions-button")
@@ -317,7 +317,7 @@ function MultipleFileUploadXBlock(runtime, element)
             $("#confirm-accept").on("click", action);
 
             //leanModal does not allow multiple triggers for the same modal.
-            $(".confirm-dialog").click();
+            $("#confirm-dialog").click();
         }
 
         //reset a submission, removing all files and grades.
