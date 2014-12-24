@@ -163,6 +163,9 @@ class FileManagementMixin(object):
         Arguments:
         filelist: A dictionary containint file metadata.
         """
+        if filelist is None:
+            return
+
         for key in filelist.keys():
             self.delete_file(filelist, ObjectId(key))
 
