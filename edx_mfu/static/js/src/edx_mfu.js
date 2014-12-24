@@ -149,7 +149,7 @@ function MultipleFileUploadXBlock(runtime, element)
             //reopen all submissions for the asingment.
             $(element).find(".reopen-all-submissions-button")
                 .on("click", function() {
-                    renderConfirm("Remove all submissions?", function () {
+                    renderConfirm("Reopen all student submissions?", function () {
                         $.get(reopenAllSubmissionsUrl).success(function() {
                             $.each(allStudentData.assignments, function(i, val) {
                                 reopenSubmission(val);
