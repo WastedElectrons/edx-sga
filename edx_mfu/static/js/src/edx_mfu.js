@@ -125,7 +125,7 @@ function MultipleFileUploadXBlock(runtime, element)
             $("#confirm-dialog").leanModal({closeButton: '#confirm-exit'});
             $("#confirm-exit").on("click", function() {
                 setTimeout(function() {
-                    $("#confirm-dialog").click(); 
+                    $("#grade-submissions-button").click(); 
                 }, 225);
             });
 
