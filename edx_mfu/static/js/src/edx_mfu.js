@@ -186,7 +186,7 @@ function MultipleFileUploadXBlock(runtime, element)
 
                             renderStaffGrading(allStudentData);
                         });
-                    )};
+                    });
                 });
 
             //All upload, download and delete for annotated files
