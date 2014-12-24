@@ -164,9 +164,10 @@ function MultipleFileUploadXBlock(runtime, element)
             //Remove a submission, including grades and files.
             $(element).find(".remove-submission-button")
                 .on("click", function() {
+                    var module_id = $(this).parents("tr").data("module_id");
+                    var url = removeSubmissionUrl + "?module_id=" + module_id;
                     renderConfirm("Remove this submission?", function () {
-                        var module_id = $(this).parents("tr").data("module_id");
-                        var url = removeSubmissionUrl + "?module_id=" + module_id;
+
                         
                         $.get(url).success(function() {
                             removeSubmission($.grep(allStudentData.assignments, function(e) {
@@ -181,10 +182,9 @@ function MultipleFileUploadXBlock(runtime, element)
             //reopens a submission for a student.  Clears previous grade.
             $(element).find(".reopen-submission-button")
                 .on("click", function() {
-                    renderConfirm("Reopen this submission?", function () {
-                        var module_id = $(this).parents("tr").data("module_id");
-                        var url = reopenSubmissionUrl + "?module_id=" + module_id;
-                        
+                    var module_id = $(this).parents("tr").data("module_id");
+                    var url = reopenSubmissionUrl + "?module_id=" + module_id;
+                    renderConfirm("Reopen this submission?", function () {    
                         $.get(url).success(function() {
                             reopenSubmission($.grep(allStudentData.assignments, function(e) {
                                 return e.module_id == module_id;
