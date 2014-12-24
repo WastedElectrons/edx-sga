@@ -176,7 +176,7 @@
             <% } %>
 
             <p><a class="toggle-submission-button" href="#toggle-submission">
-              <% if (assignment.submitted) %>
+              <% if (assignment.submitted) { %>
                 {% trans "Open Submission" %}
               <% } else { %>
                 {% trans "Close Submission" %}
