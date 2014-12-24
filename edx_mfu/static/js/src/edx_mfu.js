@@ -203,23 +203,21 @@ function MultipleFileUploadXBlock(runtime, element)
                     var openUrl = openSubmissionUrl + "?module_id=" + module_id;
                     var closeUrl = closeSubmissionUrl + "?module_id=" + module_id;
                     
-                    if(allStudentData.assignments[module_id].submitted)
+                    var assignment = $.grep(allStudentData.assignments, function(e) {
+                            return e.module_id == module_id;
+                    })[0];
+
+                    if(assignment.submitted)
                     {
                         $.get(openUrl).success(function() {
-                            openSubmission($.grep(allStudentData.assignments, function(e) {
-                                return e.module_id == module_id;
-                            })[0]);
-
+                            openSubmission(assignment);
                             renderStaffGrading(allStudentData);
                         });
                     }
                     else
                     {
                         $.get(closeUrl).success(function() {
-                            closeSubmission($.grep(allStudentData.assignments, function(e) {
-                                return e.module_id == module_id;
-                            })[0]);
-
+                            closeSubmission(assignment);
                             renderStaffGrading(allStudentData);
                         });
                     }
