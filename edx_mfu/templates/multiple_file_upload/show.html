@@ -97,7 +97,7 @@
   <div id="mfu-content">
   </div>
 
-  <section aria-hidden="true" class="modal grade-modal" id="{{ id }}-confirm">
+  <section aria-hidden="true" class="modal confirm-modal" id="{{ id }}-confirm">
     <div class="inner-wrapper" style="color: black">
       <div style="display: block;">
         <p><span id="confirm-message"></span></p>
@@ -184,13 +184,13 @@
             </a></p>
 
             <% if (assignment.uploaded.length > 0) { %>
-              <p><a class="remove-submission-button" href="#{{ id }}-confirm">
+              <p><a class="remove-submission-button">
                 {% trans "Remove Submission" %}
               </a></p>
             <% } %>
 
             <% if (assignment.submitted) { %>
-              <p><a class="reopen-submission-button" href="#{{ id }}-confirm">
+              <p><a class="reopen-submission-button">
                 {% trans "Reopen Submission" %}
               </a></p>
             <% } %>
@@ -209,17 +209,20 @@
         <td></td>
         <td></td>
         <td>
-          <a class="remove-all-submissions-button" href="#{{ id }}-confirm">
+          <a class="remove-all-submissions-button">
                 {% trans "Remove All Submissions" %}
           </a>
         </td>
         <td>
-          <a class="reopen-all-submissions-button" href="#{{ id }}-confirm">
+          <a class="reopen-all-submissions-button">
                 {% trans "Reopen All Submissions" %}
           </a>
         </td>
       </tr>
     </table>
+    <div style="display: none;">
+      <a class="confirm-dialog" href="#{{ id }}-confirm"></a>
+    </div>
   </script>
 
   <div aria-hidden="true" class="wrap-instructor-info">

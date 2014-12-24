@@ -122,6 +122,8 @@ function MultipleFileUploadXBlock(runtime, element)
                 .leanModal({closeButton: "#manage-annotated-exit"})
                 .on("click", handleManageAnnotated);
 
+            $(".confirm-dialog").leanModal({closeButton: '#confirm-exit'});
+
             //all submission control
             $(element).find(".remove-all-submissions-button")
                 .leanModal({closeButton: '#confirm-exit'})
@@ -154,7 +156,6 @@ function MultipleFileUploadXBlock(runtime, element)
 
             //reopen all submissions for the asingment.
             $(element).find(".reopen-all-submissions-button")
-                .leanModal({closeButton: '#confirm-exit'})
                 .on("click", function() {
                     renderStaffConfirm( 
                         "Remove all submissions?",
@@ -183,7 +184,6 @@ function MultipleFileUploadXBlock(runtime, element)
 
             //Remove a submission, including grades and files.
             $(element).find(".remove-submission-button")
-                .leanModal({closeButton: '#confirm-exit'})
                 .on("click", renderStaffConfirm(
                     "Remove this submission?",
                     function () {
@@ -214,7 +214,6 @@ function MultipleFileUploadXBlock(runtime, element)
 
             //reopens a submission for a student.  Clears previous grade.
             $(element).find(".reopen-submission-button")
-                .leanModal({closeButton: '#confirm-exit'})
                 .on("click", renderStaffConfirm(
                     "Reopen this submission?",
                     function () {
@@ -369,6 +368,8 @@ function MultipleFileUploadXBlock(runtime, element)
         {
             $("#confirm-message").text(message);
             $("#confirm-accept").on("click", action);
+
+            $(".confirm-dialog").click();
         }
 
         //reset a submission, removing all files and grades.
