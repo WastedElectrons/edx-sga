@@ -93,6 +93,7 @@ function MultipleFileUploadXBlock(runtime, element)
         function renderStaffGrading(data) 
         {
             $(".grade-modal").hide();
+            $(".confirm-modal").hide();
             //$(".annotated-modal").hide();
 
             var allStudentData = data;
