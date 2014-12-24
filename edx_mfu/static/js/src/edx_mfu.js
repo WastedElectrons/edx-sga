@@ -140,18 +140,6 @@ function MultipleFileUploadXBlock(runtime, element)
                         });
                     });
                 });
-/*                .on("click", function()
-                {
-                    var url = removeAllSubmissionsUrl;
-                    
-                    $.get(url).success(function() {
-                        allStudentData.assignments.each(
-                            removeSubmission(this)
-                        );
-
-                        renderStaffGrading(allStudentData);
-                    });
-                });*/
 
 
             //reopen all submissions for the asingment.
@@ -169,18 +157,6 @@ function MultipleFileUploadXBlock(runtime, element)
                         });
                     });
                 });
-/*                .on("click", function()
-                {
-                    var url = reopenAllSubmissionsUrl;
-                    
-                    $.get(url).success(function() {
-                        $.each(allStudentData.assignments, function(i, val) {
-                            reopenSubmission(val);
-                        });
-
-                        renderStaffGrading(allStudentData);
-                    });
-                });*/
 
             //Remove a submission, including grades and files.
             $(element).find(".remove-submission-button")
@@ -198,19 +174,6 @@ function MultipleFileUploadXBlock(runtime, element)
                         renderStaffGrading(allStudentData);
                     });
                 }));
-/*                .on("click", function()
-                {
-                    var module_id = $(this).parents("tr").data("module_id");
-                    var url = removeSubmissionUrl + "?module_id=" + module_id;
-                    
-                    $.get(url).success(function() {
-                        removeSubmission($.grep(allStudentData.assignments, function(e) {
-                            return e.module_id == module_id;
-                        })[0]);
-
-                        renderStaffGrading(allStudentData);
-                    });
-                });*/
 
             //reopens a submission for a student.  Clears previous grade.
             $(element).find(".reopen-submission-button")
@@ -228,19 +191,6 @@ function MultipleFileUploadXBlock(runtime, element)
                         renderStaffGrading(allStudentData);
                     });
                 }));
-/*                .on("click", function()
-                {
-                    var module_id = $(this).parents("tr").data("module_id");
-                    var url = reopenSubmissionUrl + "?module_id=" + module_id;
-                    
-                    $.get(url).success(function() {
-                        reopenSubmission($.grep(allStudentData.assignments, function(e) {
-                            return e.module_id == module_id;
-                        })[0]);
-
-                        renderStaffGrading(allStudentData);
-                    });
-                });*/
 
             //All upload, download and delete for annotated files
             function handleManageAnnotated() 
@@ -369,6 +319,7 @@ function MultipleFileUploadXBlock(runtime, element)
             $("#confirm-message").text(message);
             $("#confirm-accept").on("click", action);
 
+            //leanModal does not allow multiple triggers for the same modal.
             $(".confirm-dialog").click();
         }
 
