@@ -126,7 +126,6 @@ function MultipleFileUploadXBlock(runtime, element)
 
             //all submission control
             $(element).find(".remove-all-submissions-button")
-                .leanModal({closeButton: '#confirm-exit'})
                 .on("click", function() {
                     renderConfirm( 
                         "Remove all submission data for all students (all files will be deleted)?",
@@ -145,9 +144,7 @@ function MultipleFileUploadXBlock(runtime, element)
             //reopen all submissions for the asingment.
             $(element).find(".reopen-all-submissions-button")
                 .on("click", function() {
-                    renderConfirm( 
-                        "Remove all submissions?",
-                        function () {
+                    renderConfirm("Remove all submissions?", function () {
                         $.get(reopenAllSubmissionsUrl).success(function() {
                             $.each(allStudentData.assignments, function(i, val) {
                                 reopenSubmission(val);
@@ -161,9 +158,7 @@ function MultipleFileUploadXBlock(runtime, element)
             //Remove a submission, including grades and files.
             $(element).find(".remove-submission-button")
                 .on("click", function() {
-                    renderConfirm(
-                        "Remove this submission?",
-                        function () {
+                    renderConfirm("Remove this submission?", function () {
                         var module_id = $(this).parents("tr").data("module_id");
                         var url = removeSubmissionUrl + "?module_id=" + module_id;
                         
@@ -180,9 +175,7 @@ function MultipleFileUploadXBlock(runtime, element)
             //reopens a submission for a student.  Clears previous grade.
             $(element).find(".reopen-submission-button")
                 .on("click", function() {
-                    renderConfirm(
-                        "Reopen this submission?",
-                        function () {
+                    renderConfirm("Reopen this submission?", function () {
                         var module_id = $(this).parents("tr").data("module_id");
                         var url = reopenSubmissionUrl + "?module_id=" + module_id;
                         
