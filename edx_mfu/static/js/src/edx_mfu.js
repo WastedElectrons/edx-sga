@@ -151,7 +151,7 @@ function MultipleFileUploadXBlock(runtime, element)
 
 
             //reopen all submissions for the asingment.
-            $(element).find(".reopen-all-submissions-button")
+            $(element).find(".open-all-submissions-button")
                 .on("click", function() {
                     renderConfirm("Reopen all student submissions?", function () {
                         $.get(openAllSubmissionsUrl).success(function() {
@@ -165,7 +165,7 @@ function MultipleFileUploadXBlock(runtime, element)
                 });
 
             //reopen all submissions for the asingment.
-            $(element).find(".reopen-all-submissions-button")
+            $(element).find(".close-all-submissions-button")
                 .on("click", function() {
                     renderConfirm("Close all student submissions?", function () {
                         $.get(closeAllSubmissionsUrl).success(function() {
