@@ -28,6 +28,7 @@ function MultipleFileUploadXBlock(runtime, element)
         var closeSubmissionUrl = runtime.handlerUrl(element, 'staff_close_submission')
         var removeSubmissionUrl = runtime.handlerUrl(element, 'staff_remove_submission')
         var openAllSubmissionsUrl = runtime.handlerUrl(element, 'staff_open_all_submissions');
+        var closeAllSubmissionsUrl = runtime.handlerUrl(element, 'staff_close_all_submissions');
         var removeAllSubmissionsUrl = runtime.handlerUrl(element, 'staff_remove_all_submissions');
 
         
