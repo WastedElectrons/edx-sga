@@ -533,7 +533,7 @@ function MultipleFileUploadXBlock(runtime, element)
 
         loadjs("/static/js/vendor/jQuery-File-Upload/js/jquery.iframe-transport.js");
         loadjs("/static/js/vendor/jQuery-File-Upload/js/jquery.fileupload.js");
-        loadjs("/static/js/vendor/jQuery-File-Upload/js/date.js");
+        loadjs("/static/js/vendor/date.js");
         xblock($, _);
     }
     else 
