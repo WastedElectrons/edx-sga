@@ -197,14 +197,18 @@
         <td></td>
         <td></td>
         <td>
-          <a class="remove-all-submissions-button" href ="#{{ id }}-remove-all-submissions">
+          <P><a class="remove-all-submissions-button" href ="#{{ id }}-remove-all-submissions">
                 {% trans "Remove All Submissions" %}
-          </a>
+          </a></p>
         </td>
         <td>
-          <a class="reopen-all-submissions-button" href="#{{ id }}-reopen-all-submissions">
-                {% trans "Reopen All Submissions" %}
-          </a>
+          <p><a class="open-all-submissions-button" href="#{{ id }}-open-all-submissions">
+                {% trans "Open All Submissions" %}
+          </a></p>
+
+          <p><a class="close-all-submissions-button" href="#{{ id }}-close-all-submissions">
+                {% trans "Close All Submissions" %}
+          </a></p>
         </td>
       </tr>
     </table>

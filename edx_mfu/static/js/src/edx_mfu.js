@@ -27,7 +27,7 @@ function MultipleFileUploadXBlock(runtime, element)
         var openSubmissionUrl = runtime.handlerUrl(element, 'staff_open_submission');
         var closeSubmissionUrl = runtime.handlerUrl(element, 'staff_close_submission')
         var removeSubmissionUrl = runtime.handlerUrl(element, 'staff_remove_submission')
-        var reopenAllSubmissionsUrl = runtime.handlerUrl(element, 'staff_reopen_all_submissions');
+        var openAllSubmissionsUrl = runtime.handlerUrl(element, 'staff_open_all_submissions');
         var removeAllSubmissionsUrl = runtime.handlerUrl(element, 'staff_remove_all_submissions');
 
         
@@ -154,9 +154,23 @@ function MultipleFileUploadXBlock(runtime, element)
             $(element).find(".reopen-all-submissions-button")
                 .on("click", function() {
                     renderConfirm("Reopen all student submissions?", function () {
-                        $.get(reopenAllSubmissionsUrl).success(function() {
+                        $.get(openAllSubmissionsUrl).success(function() {
                             $.each(allStudentData.assignments, function(i, val) {
                                 openSubmission(val);
+                            });
+
+                            renderStaffGrading(allStudentData);
+                        });
+                    });
+                });
+
+            //reopen all submissions for the asingment.
+            $(element).find(".reopen-all-submissions-button")
+                .on("click", function() {
+                    renderConfirm("Close all student submissions?", function () {
+                        $.get(closeAllSubmissionsUrl).success(function() {
+                            $.each(allStudentData.assignments, function(i, val) {
+                                closeSubmission(val);
                             });
 
                             renderStaffGrading(allStudentData);
@@ -180,22 +194,6 @@ function MultipleFileUploadXBlock(runtime, element)
                     });
                 });
 
-            //reopens a submission for a student.  Clears previous grade.
-/*            $(element).find(".reopen-submission-button")
-                .on("click", function() {
-                    var module_id = $(this).parents("tr").data("module_id");
-                    var url = openSubmissionUrl + "?module_id=" + module_id;
-                    renderConfirm("Reopen this submission?", function () {    
-                        $.get(url).success(function() {
-                            openSubmission($.grep(allStudentData.assignments, function(e) {
-                                return e.module_id == module_id;
-                            })[0]);
-
-                            renderStaffGrading(allStudentData);
-                        });
-                    });
-                });
-*/
             //reopens a submission for a student.  Clears previous grade.
             $(element).find(".toggle-submission-button")
                 .on("click", function() {

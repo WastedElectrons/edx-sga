@@ -367,7 +367,7 @@ class MultipleFileUploadXBlock(
         return Response(status=204)
 
     @XBlock.handler
-    def staff_reopen_all_submissions(self, request, suffix=''):
+    def staff_open_all_submissions(self, request, suffix=''):
         """Unsubmits all submissions.
         """
         if not self.is_course_staff():
@@ -383,6 +383,7 @@ class MultipleFileUploadXBlock(
             self.set_student_state(
                 module.id,
                 is_submitted=False
+                submission_time=None
             )
 
         return Response(status=204)
