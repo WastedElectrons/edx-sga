@@ -209,15 +209,15 @@ function MultipleFileUploadXBlock(runtime, element)
 
                     if(assignment.submitted)
                     {
-                        $.get(openUrl).success(function() {
-                            openSubmission(assignment);
+                        $.get(closeUrl).success(function() {
+                            closeSubmission(assignment);
                             renderStaffGrading(allStudentData);
                         });
                     }
                     else
                     {
-                        $.get(closeUrl).success(function() {
-                            closeSubmission(assignment);
+                        $.get(openUrl).success(function() {
+                            openSubmission(assignment);
                             renderStaffGrading(allStudentData);
                         });
                     }
