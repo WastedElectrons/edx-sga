@@ -209,18 +209,19 @@ function MultipleFileUploadXBlock(runtime, element)
 
                     if(assignment.submitted)
                     {
-                        $.get(closeUrl).success(function() {
-                            closeSubmission(assignment);
-                            renderStaffGrading(allStudentData);
-                        });
-                    }
-                    else
-                    {
                         $.get(openUrl).success(function() {
                             openSubmission(assignment);
                             renderStaffGrading(allStudentData);
                         });
                     }
+                    else
+                    {
+                        $.get(closeUrl).success(function() {
+                            closeSubmission(assignment);
+                            renderStaffGrading(allStudentData);
+                        });
+                    }
+
                 });
 
             //All upload, download and delete for annotated files
