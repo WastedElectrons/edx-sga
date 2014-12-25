@@ -382,7 +382,7 @@ class MultipleFileUploadXBlock(
         for module in query:
             self.set_student_state(
                 module.id,
-                is_submitted=False
+                is_submitted=False,
                 submission_time=None
             )
 
