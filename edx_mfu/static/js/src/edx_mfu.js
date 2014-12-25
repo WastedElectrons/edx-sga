@@ -375,7 +375,7 @@ function MultipleFileUploadXBlock(runtime, element)
         function closeSubmission(submission)
         {
             submission.submitted = false;
-            submission.submitted_on = Date.now().toString('MMMM, d yyyy h:mm tt');
+            submission.submitted_on = Date.now().toISOString();
             submission.may_grade = true;
         }
 
