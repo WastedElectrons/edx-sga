@@ -533,7 +533,7 @@ function MultipleFileUploadXBlock(runtime, element)
 
         loadjs("/static/js/vendor/jQuery-File-Upload/js/jquery.iframe-transport.js");
         loadjs("/static/js/vendor/jQuery-File-Upload/js/jquery.fileupload.js");
-        loadjs("/static/js/vendor/date.js");
+        //loadjs("/static/js/vendor/date.js");
         xblock($, _);
     }
     else 
@@ -542,6 +542,6 @@ function MultipleFileUploadXBlock(runtime, element)
          * Studio, on the other hand, uses require.js and already knows about
          * jquery.fileupload.
          */
-        require(["jquery", "underscore", "jquery.fileupload", "date"], xblock);
+        require(["jquery", "underscore", "jquery.fileupload"], xblock);
     }
 }
