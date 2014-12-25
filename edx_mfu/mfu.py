@@ -221,9 +221,9 @@ class MultipleFileUploadXBlock(
 
             # can a grade be entered?
             due = get_extended_due_date(self)
-            may_grade = (instructor or not approved)
+            may_grade = (instructor or not approved) and submitted
             if due is not None:
-                may_grade = may_grade and (submitted or (due < _now()))
+                may_grade = may_grade and (due < _now())
 
             uploaded = []
             if (state.get('is_submitted')):
